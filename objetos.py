@@ -1,18 +1,32 @@
-import PySimpleGUI as sg
-import numpy as np
-import casillero
+#Clase Ficha
+class Ficha:
+	#Atributos
+	def __init__(self):
+		self.letra=""
+		self.punto=0
+		self.alto=ALTOFICHA
+		self.ancho=ANCHOFICHA
+	
+	#Métodos
+	def asignar_letra(self,letra):
+		self.letra=letra
+
+	def asignar_punto(self,punto):
+		self.punto=punto 
+
+
 
 #Clase Tablero
 class Tablero:
 	#Atributos
-	def __init__(self,alto,ancho):
-		self.matriz = casillero.Casillero(1,2,4) for col in range(alto)] for row in range(ancho)]
-		self.alto = alto
-		self.ancho = ancho
+	def __init__(self):
+		self.alto = ALTOTABLERO
+		self.ancho = ANCHOTABLERO
 		self.cant_casilla_con_premio=0
 		self.cant_casilla_normal = 0
 		self.cant_casilla_descuento = 0
 
+	#Metodos
 	def asignar_casilla_normal(self,cant):
 		self.cant_casilla_normal = cant
 
@@ -31,16 +45,20 @@ class Tablero:
 	def cant_casilla_con_premio(self):
 		return self.cant_casilla_con_premio
 
+#Clase Jugador
 
-	def ocupar_casilla(self,ficha):
-		if self.
-"""
-tabla = Tablero(15,15)
-print ("Tablero 1 = ",tabla.alto)
-matriz = tabla.dibujar_tablero()
-print(matriz[0][0])
-matriz[0][0] = sg.Button(str("Vacio"))
-print(matriz[0][0])
-#print("MATRIZ = ", tabla.hacer_tablero())
 
-"""
+
+
+#Clase Casilla
+class Casilla:
+	#Atributos
+	def __init__(self,valor):
+		self.valor = valor
+		self.ocupada = False
+	#Métodos
+	def ocupar_casilla(self):
+		self.ocupada = True
+
+	def esta_ocupada(self):
+		return self.ocupada

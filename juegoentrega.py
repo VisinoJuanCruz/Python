@@ -1,8 +1,8 @@
 import PySimpleGUI as sg
-import time
-import objetos
+#import time
+#import objetos
 import tablero
-import casillero
+#import casillero
 
 ALTO = 15
 ANCHO = 15
