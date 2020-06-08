@@ -6,12 +6,14 @@ import casillero
 class Tablero:
 	#Atributos
 	def __init__(self,alto,ancho):
-		self.matriz = casillero.Casillero(1,2,4) for col in range(alto)] for row in range(ancho)]
+		self.matriz = [[sg.Button(size=(0, 0),button_color= ('red','black') ,pad=(0,0), border_width=1,
+			font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
 		self.alto = alto
 		self.ancho = ancho
 		self.cant_casilla_con_premio=0
 		self.cant_casilla_normal = 0
 		self.cant_casilla_descuento = 0
+		self.casilla_con_ficha = None
 
 	def asignar_casilla_normal(self,cant):
 		self.cant_casilla_normal = cant
@@ -33,7 +35,7 @@ class Tablero:
 
 
 	def ocupar_casilla(self,ficha):
-		if self.
+		self.casilla_con_ficha = ficha
 """
 tabla = Tablero(15,15)
 print ("Tablero 1 = ",tabla.alto)
