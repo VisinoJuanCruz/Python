@@ -2,11 +2,12 @@ import PySimpleGUI as sg
 import numpy as np
 import casillero
 
+
 #Clase Tablero
 class Tablero:
 	#Atributos
 	def __init__(self,alto,ancho):
-		self.matriz = [[sg.Button(size=(0, 0),button_color= ('red','black') ,pad=(0,0), border_width=1,
+		self.matriz = [[sg.Button(size=(3, 3),button_color= ('red','red') ,pad=(0,0), border_width=1,
 			font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
 		self.alto = alto
 		self.ancho = ancho
@@ -36,6 +37,12 @@ class Tablero:
 
 	def ocupar_casilla(self,ficha):
 		self.casilla_con_ficha = ficha
+
+	def asignar_casilleros(self):
+		for x in col:
+			for y in row:
+				if (x==y):
+					self.matriz[x,y]= sg.Button.Update(button_color=('white','white'))
 """
 tabla = Tablero(15,15)
 print ("Tablero 1 = ",tabla.alto)

@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 
 class Casillero:
 	def __init__(self, modificador_de_valor,alto,ancho):
-		self.button = [sg.Button(button_color=("white","black"),size=(alto, ancho),key=(row,col))]
+		self.button = [sg.Button(button_color=("white","black"),size=(alto, ancho))]
 		self.modificador_de_valor = modificador_de_valor
 		self.ficha_en_casillero = False
 		
