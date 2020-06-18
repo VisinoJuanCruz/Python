@@ -7,7 +7,7 @@ import casillero
 class Tablero:
 	#Atributos
 	def __init__(self,alto,ancho):
-		self.matriz = [[sg.Button(size=(3, 3),button_color= ('red','red') ,pad=(0,0), border_width=1,
+		self.matriz = [[sg.Button(size=(3, 3),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
 			font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
 		self.alto = alto
 		self.ancho = ancho
@@ -43,6 +43,34 @@ class Tablero:
 			for y in row:
 				if (x==y):
 					self.matriz[x,y]= sg.Button.Update(button_color=('white','white'))
+
+	def desabilitar_botones(self,window):
+		for x in range(self.alto):
+			for y in range(self.ancho):
+				self.matriz[x,y].update(disabled = True)
+
+	def habilitar_botones(self,window,sentido,estructura):
+		coordenada = estructura[-1]
+		if sentido == 'vertical' and coordenada[0] < self.alto:
+			window[coordenada[0]+1,coordenada[1]].update(disabled = False)
+		elif sentido == 'horizontal:' and coordenada[0] < self.ancho:
+			window[coordenada[0],coordenada[1]+1].update(disabled = False)
+		else:
+			if coordenada[0]+1<self.alto:
+				window[coordenada[0]+1,coordenada[1]].update(disabled = False)
+			if coordenada[1]+1<self.ancho:
+				window[coordenada[0],coordenada[1]+1].update(disabled = False)
+			
+	def asignar_especiales(self):
+		for x in range(self.alto):
+			for y in range(self.ancho):
+				if ((x ==y) or ((x+y)== self.ancho-1)) :
+					self.matriz[x][y].ButtonColor=('yellow','yellow')
+				if ((x == 0) or (x==7) or (x==14)) and ((y == 0) or (y==7) or (y==14)):
+					self.matriz[x][y].ButtonColor=('black','black')
+				if ((x ==7) and (y==7)):
+					self.matriz[x][y].ButtonColor=('red','red')
+
 """
 tabla = Tablero(15,15)
 print ("Tablero 1 = ",tabla.alto)

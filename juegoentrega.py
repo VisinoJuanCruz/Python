@@ -30,7 +30,7 @@ while True:
 	#print(matriz[event[0]][event[1]])
 	#matriz[event[0]][event[1]] = sg.Button(str("OCUPADO"), image_filename="./IconosFichas/casilla.png",size=(0, 0), pad=(0,0), border_width=1,
 	#		font='any 8')
-	#print(matriz[event[0]][event[1]])
+	print(matriz[event[0]][event[1]].Text)
 	#window.clean()
 	
 	
