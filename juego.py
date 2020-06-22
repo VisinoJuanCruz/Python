@@ -13,7 +13,7 @@ def letraRandom():
 
 
 bolsa_fichas = {
-	
+	""
 	'a': {'cantidad':11 , 'valor': 1},
 	'b': {'cantidad': 3, 'valor': 3},
 	'c': {'cantidad': 4, 'valor': 2},
@@ -49,9 +49,23 @@ def selecciono_random():
 	return random.choice(list(bolsa_fichas.keys()))
 
 
+def repartir_fichas(jugador):
+	if jugador == "maquina":
+		while jugador.cant_fichas < len(mano_rival[0]):
+			for x in range(mano_rival[0]):
+				if mano_rival[0][x].ButtonText == "":
+					mano_rival[0][x].ButtonText = selecciono_random()
+					jugador.cant_fichas += 1
+	if jugador == "jugador1":
+		while jugador.cant_fichas < len(mano_propia[0]):
+			for x in range(mano_propia[0]):
+				if mano_propia[0][x].ButtonText == "":
+					mano_propia[0][x].ButtonText = selecciono_random()
+					mano_propia[0][x].FileImage = "./IconosFichas/A.png"
+					mano_propia[0][x].ImageSubSample = 2
+					jugador.cant_fichas += 1
 
-
-
+"""
 randomcito = selecciono_random()
 print(randomcito)
 print(bolsa_fichas[randomcito]['valor'])
@@ -67,3 +81,7 @@ print(comienza.turno)
 if(comienza == maquina):
 	comienza = jugador1
 
+
+if(comienza == jugador1):
+	
+"""

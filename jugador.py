@@ -1,6 +1,7 @@
 class Jugador:
 	#Atributos
 	def __init__(self):
+		self.fichas = []
 		self.cant_fichas= 0
 		self.cant_puntos = 0
 		self.turno = False

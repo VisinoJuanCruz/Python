@@ -5,6 +5,7 @@ import mano
 import random
 import jugador
 import string
+import juego
 
 ALTO=15
 ANCHO=15
@@ -42,8 +43,34 @@ bolsa_fichas = {
 	'z': {'cantidad': 1, 'valor': 10},
 }
 
-def selecciono_random():
-	return random.choice(list(bolsa_fichas.keys()))
+letras_disponibles = ['a','a','a','a','a','a','a','a','a','a','a','b','b','b','c','c','c','c','d','d','d','d',
+'e','e','e','e','e','e','e','e','e','e','e','f','f','g','g','h','h','i','i','i','i','i','i','i','i','j','j',
+'k','l','l','l','l','m','m','m','n','n','n','n','n','o','o','o','o','o','o','o','o','p','p','q','r',
+'r','r','r','rr','s','s','s','s','s','s','s','t','t','t','t','u','u','u','u','u','u','v','v','w','x','y','z']
+
+def selecciono_random(letras_disponibles):
+	letra = random.choice(letras_disponibles)
+	letras_disponibles.remove(letra)
+	bolsa_fichas[letra]['cantidad'] -= 1
+	return letra
+	
+
+
+def repartir_fichas(jugador):
+	if jugador == maquina:
+		while jugador.cant_fichas < len(mano_rival.fichas[0]):
+			for x in range(len(mano_rival.fichas[0])):
+				if mano_rival.fichas[0][x].ButtonText == "":
+					mano_rival.fichas[0][x].ButtonText = selecciono_random(letras_disponibles).upper()
+					jugador.cant_fichas += 1
+	if jugador == jugador1:
+		while jugador.cant_fichas < len(mano_propia.fichas[0]):
+			for x in range(len(mano_propia.fichas[0])):
+				if mano_propia.fichas[0][x].ButtonText == "":
+					mano_propia.fichas[0][x].ButtonText = selecciono_random(letras_disponibles).upper()
+					mano_propia.fichas[0][x].FileImage = "./IconosFichas/A.png"
+					mano_propia.fichas[0][x].ImageSubSample = 2
+					jugador.cant_fichas += 1
 
 
 mano_rival = mano.Mano(True)
@@ -51,50 +78,76 @@ mano_propia = mano.Mano(False)
 tablero =  table.Tablero(ALTO,ANCHO)
 
 #fichas_del_rival
-mano_rival =  mano_rival.fichas
+#mano_rival =  mano_rival.fichas
 #fichas_del_jugador
-mano_propia =  mano_propia.fichas	
+#mano_propia =  mano_propia.fichas	
 
-layout = [[sg.Text('ScrabbleAR GAME',size=(15,0),justification='center', font=("Helvetica", 25))]]
-layout += [[sg.Text("")]]
-layout+=mano_rival
-layout += [[sg.Text("")]]		
-layout+=tablero.matriz
-layout += [[sg.Text("")]]
-layout+=mano_propia
-
-
-
-layout+= [[sg.Button("INICIAR")]]
-window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
 
 jugador1 = jugador.Jugador()
 maquina = jugador.Jugador()
+
+
+repartir_fichas(maquina)
+repartir_fichas(jugador1)
+
+
+
+#layout = [[sg.Text('ScrabbleAR GAME',size=(15,0),justification='center', font=("Helvetica", 25))]]
+#layout += [[sg.Text("")]]
+layout=mano_rival.fichas
+layout += [[sg.Text("")]]		
+layout+=tablero.matriz
+layout += [[sg.Text("")]]
+layout+=mano_propia.fichas+[[sg.Button("PASAR TURNO")]]
+#layout +=[[sg.Button("PASAR TURNO")]]
+
+
+layout+= [[sg.Button("POSPONER")]]
+window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
+
+
 
 comienza = random.choice((jugador1,maquina))
 comienza.turno = True
 print(jugador1.turno)
 print(maquina.turno)
 coordenadas = []
+#MOMENTANEO
+jugador1.turno = True
 #print(len(mano_propia.fichas))
 tablero.asignar_especiales()
 while True:
-	
-	#while(jugador1.esTurno()):
-	#tablero.desabilitar_botones(window)
-	#window[(7,7)].update(disabled = False)
+	coordenadas_mano={}
+	coordenadas_tablero = {}
 	sentido = ''
-	event, values = window.read()
-	print(event, values)
-	coordenadas.append(event)
-	window[event].update(text=selecciono_random().upper(), button_color=('red','black'))
-	#tablero.desabilitar_botones(window)
-	#tablero.habilitar_botones(window,sentido,coordenadas)
-	#if inicio == True:
-	#	tablero.asignar_especiales(window)
-	#	inicio = False
-	print(window[event].ButtonText)
+	print(len(coordenadas_mano.values()))
+	while(jugador1.turno):
 
+		
+		event, values = window.read()
+		#Desactivo las fichas de la mano una vez que seleccioné una.
+		mano_propia.deshabilitar(window)
+		if (event != "PASAR TURNO"):
+			
+			coordenadas_mano[event] = window[event].ButtonText
+			tablero.estado_botones(window,False)
+					
+			event, values = window.read()
+			window[event].update(text = (list(coordenadas_mano.values())[-1]))
+			tablero.estado_botones(window,True)
+			#for x in mano_propia.fichas[0]:
+			#	window[x.Key].update(disabled = False)
+			mano_propia.habilitar(window)
+			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
+			print("coordenadas del tablero")
+			print(coordenadas_tablero)
+		else:
+			jugador1.turno = False
+
+		
+		print("Fin")
+
+	
 	
 
 

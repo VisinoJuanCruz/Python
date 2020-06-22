@@ -44,10 +44,10 @@ class Tablero:
 				if (x==y):
 					self.matriz[x,y]= sg.Button.Update(button_color=('white','white'))
 
-	def desabilitar_botones(self,window):
+	def estado_botones(self,window,estado):
 		for x in range(self.alto):
 			for y in range(self.ancho):
-				self.matriz[x,y].update(disabled = True)
+				window[x,y].update(disabled = estado)
 
 	def habilitar_botones(self,window,sentido,estructura):
 		coordenada = estructura[-1]
