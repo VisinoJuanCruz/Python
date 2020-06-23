@@ -116,6 +116,7 @@ coordenadas = []
 jugador1.turno = True
 #print(len(mano_propia.fichas))
 tablero.asignar_especiales()
+movimiento = 0
 while True:
 	coordenadas_mano={}
 	coordenadas_tablero = {}
@@ -127,16 +128,14 @@ while True:
 		event, values = window.read()
 		#Desactivo las fichas de la mano una vez que seleccioné una.
 		mano_propia.deshabilitar(window)
-		if (event != "PASAR TURNO"):
+		if (event != "PASAR TURNO") :
 			
 			coordenadas_mano[event] = window[event].ButtonText
-			tablero.estado_botones(window,False)
+			tablero.habilitar_botones(window,coordenadas_tablero)
 					
 			event, values = window.read()
 			window[event].update(text = (list(coordenadas_mano.values())[-1]))
 			tablero.estado_botones(window,True)
-			#for x in mano_propia.fichas[0]:
-			#	window[x.Key].update(disabled = False)
 			mano_propia.habilitar(window)
 			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
 			print("coordenadas del tablero")

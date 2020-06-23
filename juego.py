@@ -60,9 +60,7 @@ def repartir_fichas(jugador):
 		while jugador.cant_fichas < len(mano_propia[0]):
 			for x in range(mano_propia[0]):
 				if mano_propia[0][x].ButtonText == "":
-					mano_propia[0][x].ButtonText = selecciono_random()
-					mano_propia[0][x].FileImage = "./IconosFichas/A.png"
-					mano_propia[0][x].ImageSubSample = 2
+					
 					jugador.cant_fichas += 1
 
 """

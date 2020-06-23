@@ -43,13 +43,52 @@ class Tablero:
 			for y in row:
 				if (x==y):
 					self.matriz[x,y]= sg.Button.Update(button_color=('white','white'))
-
+	
 	def estado_botones(self,window,estado):
 		for x in range(self.alto):
 			for y in range(self.ancho):
 				window[x,y].update(disabled = estado)
+	"""
+	def sentido(self,estructura):
+		#estructura = list(estructura.keys())
+		if len(estructura) == 0:
+			return "cero"
+		elif(len(estructura) == 1):
+			return "uno"
 
-	def habilitar_botones(self,window,sentido,estructura):
+		elif(estructura[-1][0] > estructura[-2][0]):
+			return "vertical"
+		else:
+			return "horizontal"
+	"""
+	def sentido(self,lista_keys):
+		if len(lista_keys) == 0:
+			return "cero"
+		elif(len(lista_keys) == 1):
+			return "uno"
+
+		elif(lista_keys[-1][0] > lista_keys[-2][0]):
+			return "vertical"
+		else:
+			return "horizontal"
+	def habilitar_botones(self,window,estructura):
+
+		lista_keys = list(estructura.keys())
+		
+		if self.sentido(lista_keys) == "cero":
+			self.estado_botones(window,False)
+		elif self.sentido(lista_keys) == "uno":
+			if lista_keys[-1][0]+1<self.alto:
+				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
+			if lista_keys[-1][1]+1<self.ancho:
+				window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
+		elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
+			window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
+		elif (self.sentido(lista_keys) == "horizontal") and (lista_keys[-1][1]+1 < self.ancho):
+			window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
+			
+	
+		"""
 		coordenada = estructura[-1]
 		if sentido == 'vertical' and coordenada[0] < self.alto:
 			window[coordenada[0]+1,coordenada[1]].update(disabled = False)
@@ -60,7 +99,7 @@ class Tablero:
 				window[coordenada[0]+1,coordenada[1]].update(disabled = False)
 			if coordenada[1]+1<self.ancho:
 				window[coordenada[0],coordenada[1]+1].update(disabled = False)
-			
+		"""
 	def asignar_especiales(self):
 		for x in range(self.alto):
 			for y in range(self.ancho):
