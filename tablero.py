@@ -78,9 +78,9 @@ class Tablero:
 		if self.sentido(lista_keys) == "cero":
 			self.estado_botones(window,False)
 		elif self.sentido(lista_keys) == "uno":
-			if lista_keys[-1][0]+1<self.alto:
+			if int(lista_keys[-1][0]+1)<self.alto:
 				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
-			if lista_keys[-1][1]+1<self.ancho:
+			if int(lista_keys[-1][1]+1)<self.ancho:
 				window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 		elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
 			window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)

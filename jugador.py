@@ -23,8 +23,10 @@ class Jugador:
 	def esTurno(self):
 		return self.turno
 
-	def tomar_fichas(self):
-		self.cant_fichas+=1
+	def sumar_ficha(self):
+		self.cant_fichas += 1
+
+	
 
 	def sumar_puntos(self,cant):
 		self.cant_puntos +=cant

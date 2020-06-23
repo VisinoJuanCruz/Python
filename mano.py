@@ -1,5 +1,18 @@
 import PySimpleGUI as sg
 import ficha 
+import random
+
+letras_disponibles = ['a','a','a','a','a','a','a','a','a','a','a','b','b','b','c','c','c','c','d','d','d','d',
+'e','e','e','e','e','e','e','e','e','e','e','f','f','g','g','h','h','i','i','i','i','i','i','i','i','j','j',
+'k','l','l','l','l','m','m','m','n','n','n','n','n','o','o','o','o','o','o','o','o','p','p','q','r',
+'r','r','r','rr','s','s','s','s','s','s','s','t','t','t','t','u','u','u','u','u','u','v','v','w','x','y','z']
+
+def selecciono_random(letras_disponibles):
+	letra = random.choice(letras_disponibles)
+	letras_disponibles.remove(letra)
+	return letra
+
+
 
 class Mano:
 	def __init__(self,booleano):
@@ -27,4 +40,8 @@ class Mano:
 		for x in self.fichas[0]:
 			window[x.Key].Update(disabled = estado)
 
+	def reponer(self,window,estructura):
+		for x in estructura:
+			window[x].update(text = selecciono_random(letras_disponibles).upper())
+		estructura = {}
 

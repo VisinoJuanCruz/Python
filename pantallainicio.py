@@ -54,7 +54,9 @@ def palabra_existe(diccionario):
 	for x in diccionario.values():
 		palabra += x
 	if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
-		print(palabra , "EXISTE")
+		print(palabra , " EXISTE")
+
+	else:print(palabra ," NO EXISTE")
 
 def selecciono_random(letras_disponibles):
 	letra = random.choice(letras_disponibles)
@@ -66,21 +68,24 @@ def selecciono_random(letras_disponibles):
 
 def repartir_fichas(jugador):
 	if jugador == maquina:
-		while jugador.cant_fichas < len(mano_rival.fichas[0]):
+		while maquina.cant_fichas < len(mano_rival.fichas[0]):
 			for x in range(len(mano_rival.fichas[0])):
 				if mano_rival.fichas[0][x].ButtonText == "":
 					mano_rival.fichas[0][x].ButtonText = selecciono_random(letras_disponibles).upper()
-					jugador.cant_fichas += 1
+					maquina.sumar_ficha()
 	if jugador == jugador1:
-		while jugador.cant_fichas < len(mano_propia.fichas[0]):
+		while jugador1.cant_fichas < len(mano_propia.fichas[0]):
 			for x in range(len(mano_propia.fichas[0])):
 				if mano_propia.fichas[0][x].ButtonText == "":
 					mano_propia.fichas[0][x].ButtonText = selecciono_random(letras_disponibles).upper()
-					mano_propia.fichas[0][x].FileImage = "./IconosFichas/A.png"
 					mano_propia.fichas[0][x].ImageSubSample = 2
-					jugador.cant_fichas += 1
+					jugador1.sumar_ficha()
 
-
+"""
+def reponer_fichas(window,estructura):
+	for x in estructura:
+		window[x].update(text = selecciono_random(letras_disponibles).upper())
+"""
 mano_rival = mano.Mano(True)
 mano_propia = mano.Mano(False)
 tablero =  table.Tablero(ALTO,ANCHO)
@@ -94,9 +99,10 @@ tablero =  table.Tablero(ALTO,ANCHO)
 jugador1 = jugador.Jugador()
 maquina = jugador.Jugador()
 
-
+print("Jugador 1 tiene = ", jugador1.cant_fichas)
 repartir_fichas(maquina)
 repartir_fichas(jugador1)
+print("jugador 1 tiene= ",jugador1.cant_fichas)
 
 
 
@@ -134,28 +140,49 @@ while True:
 
 		
 		event, values = window.read()
+
+		
+		
 		#Desactivo las fichas de la mano una vez que seleccioné una.
 		mano_propia.deshabilitar(window)
 		if (event != "PASAR TURNO") :
 			
 			coordenadas_mano[event] = window[event].ButtonText
+			jugador1.cant_fichas = jugador1.cant_fichas - 1
+			window[list(coordenadas_mano)[-1]].update(text = "")
+
 			tablero.habilitar_botones(window,coordenadas_tablero)
 					
 			event, values = window.read()
 			window[event].update(text = (list(coordenadas_mano.values())[-1]))
 			tablero.estado_botones(window,True)
 			mano_propia.habilitar(window,coordenadas_mano)
+			
 			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
 			print(coordenadas_mano)
 		else:
 			jugador1.turno = False
 			palabra_existe(coordenadas_mano)
-		
+			print(list(coordenadas_mano.keys()))
+			for x in list(coordenadas_mano.keys()):
+				window[x].update(text = "")
+			
+			mano_propia.reponer(window,list(coordenadas_mano.keys()))
+
+			jugador1.turno = True
+			#event, values = window.read()
+			for x in list(coordenadas_tablero.keys()):
+				del coordenadas_tablero[x]
+			for x in list(coordenadas_mano.keys()):
+				del coordenadas_mano[x]
+			print(coordenadas_mano)
 		print("Fin")
+	
+	
 	event, values = window.read()
 	
-	print(event)
-	repartir_fichas(jugador1)
+	
+	
 	
 	
 
