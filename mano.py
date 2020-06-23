@@ -13,9 +13,11 @@ class Mano:
 		self.cant_fichas += 1
 		self.fichas[cant_fichas] = ficha
 
-	def habilitar(self,window):
+	def habilitar(self,window,estructura):
+		lista_keys = list(estructura.keys())
 		for x in self.fichas[0]:
-			window[x.Key].Update(disabled = False)
+			if (x.Key) not in lista_keys: 
+				window[x.Key].Update(disabled = False)
 
 	def deshabilitar(self,window):
 		for x in self.fichas[0]:

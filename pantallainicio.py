@@ -6,6 +6,7 @@ import random
 import jugador
 import string
 import juego
+import pattern.es as pt
 
 ALTO=15
 ANCHO=15
@@ -47,6 +48,13 @@ letras_disponibles = ['a','a','a','a','a','a','a','a','a','a','a','b','b','b','c
 'e','e','e','e','e','e','e','e','e','e','e','f','f','g','g','h','h','i','i','i','i','i','i','i','i','j','j',
 'k','l','l','l','l','m','m','m','n','n','n','n','n','o','o','o','o','o','o','o','o','p','p','q','r',
 'r','r','r','rr','s','s','s','s','s','s','s','t','t','t','t','u','u','u','u','u','u','v','v','w','x','y','z']
+
+def palabra_existe(diccionario):
+	palabra = ""
+	for x in diccionario.values():
+		palabra += x
+	if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
+		print(palabra , "EXISTE")
 
 def selecciono_random(letras_disponibles):
 	letra = random.choice(letras_disponibles)
@@ -136,16 +144,18 @@ while True:
 			event, values = window.read()
 			window[event].update(text = (list(coordenadas_mano.values())[-1]))
 			tablero.estado_botones(window,True)
-			mano_propia.habilitar(window)
+			mano_propia.habilitar(window,coordenadas_mano)
 			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
-			print("coordenadas del tablero")
-			print(coordenadas_tablero)
+			print(coordenadas_mano)
 		else:
 			jugador1.turno = False
-
+			palabra_existe(coordenadas_mano)
 		
 		print("Fin")
-
+	event, values = window.read()
+	
+	print(event)
+	repartir_fichas(jugador1)
 	
 	
 

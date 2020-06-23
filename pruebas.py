@@ -1,37 +1,19 @@
-import random
-"""
-letras_disponibles = ['a','a','a','a','a','a','a','a','a','a','a','b','b','b','c','c','c','c','d','d','d','d',
-'e','e','e','e','e','e','e','e','e','e','e','f','f','g','g','h','h','i','i','i','i','i','i','i','i','j','j',
-'k','l','l','l','l','m','m','m','n','n','n','n','n','o','o','o','o','o','o','o','o','p','p','q','r',
-'r','r','r','rr','s','s','s','s','s','s','s','t','t','t','t','u','u','u','u','u','u','v','v','w','x','y','z']
-print(letras_disponibles)
-letra = random.choice(letras_disponibles)
-letras_disponibles.remove(letra)
-print("x"* 50)
-print(letra)
-print(letras_disponibles)
+import pattern.es as pt
 
-"""
-diccionario = {(11, 3): '00', (11, 4): '22', (11, 5): '33', (11, 6): '44'}
-
-lista_keys = list(diccionario.keys())
+def palabra_existe(diccionario):
+	palabra = ""
+	for x in diccionario.values():
+		palabra += x
+    if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
+        print(palabra , "EXISTE")
 
 
-if len(lista_keys) == 0:
-	print("vacia")
-elif(len(lista_keys) == 1):
-	print("habilito derecha y abajo")
-else:
-	if(lista_keys[-1][0] > lista_keys[-2][0]):
-		print("Vertical")
-	else:
-		print("Horizontal")
 
-sentido = 1
+diccionario = {'22': 'G', '00': 'A', '44': 'L', '33': 'A'}
+palabra = ""
+for x in diccionario.values():
+	palabra += x
 
-print(sentido)
-def cambio_sentido(sentido):
-	sentido = "hola"
-	print(sentido)
-cambio_sentido(sentido)
-print(sentido)
+str(palabra)
+print (type(palabra))
+palabra_existe(palabra)

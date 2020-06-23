@@ -7,7 +7,7 @@ import casillero
 class Tablero:
 	#Atributos
 	def __init__(self,alto,ancho):
-		self.matriz = [[sg.Button(size=(3, 3),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
+		self.matriz = [[sg.Button(str(""),size=(3, 3),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
 			font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
 		self.alto = alto
 		self.ancho = ancho
