@@ -5,7 +5,6 @@ import mano
 import random
 import jugador
 import string
-import juego
 import pattern.es as pt
 
 ALTO=15
@@ -99,32 +98,33 @@ tablero =  table.Tablero(ALTO,ANCHO)
 jugador1 = jugador.Jugador()
 maquina = jugador.Jugador()
 
-print("Jugador 1 tiene = ", jugador1.cant_fichas)
+
 repartir_fichas(maquina)
 repartir_fichas(jugador1)
-print("jugador 1 tiene= ",jugador1.cant_fichas)
 
 
+punto = 100
 
 #layout = [[sg.Text('ScrabbleAR GAME',size=(15,0),justification='center', font=("Helvetica", 25))]]
 #layout += [[sg.Text("")]]
 layout=mano_rival.fichas
-layout += [[sg.Text("")]]		
+layout += [[sg.Text(""),sg.Text("PUNTAJE:")]]
 layout+=tablero.matriz
-layout += [[sg.Text("")]]
-layout+=mano_propia.fichas+[[sg.Button("PASAR TURNO")]]
+layout += [[sg.Text(""),sg.Text("PUNTAJE")]]
+layout+=mano_propia.fichas#+[[sg.Button("PASAR TURNO",key="_PASARTURNO_")]]
+layout+=[[sg.Button("PASAR TURNO",key="_PASARTURNO_"),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_")]]
 #layout +=[[sg.Button("PASAR TURNO")]]
 
 
-layout+= [[sg.Button("POSPONER")]]
+layout+= [[sg.Button("POSPONER", key = "_POSPONER_")]]
 window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
 
 
 
 comienza = random.choice((jugador1,maquina))
 comienza.turno = True
-print(jugador1.turno)
-print(maquina.turno)
+
+
 coordenadas = []
 #MOMENTANEO
 jugador1.turno = True
@@ -135,32 +135,19 @@ while True:
 	coordenadas_mano={}
 	coordenadas_tablero = {}
 	sentido = ''
-	print(len(coordenadas_mano.values()))
+	#print(len(coordenadas_mano.values()))
 	while(jugador1.turno):
 
 		
 		event, values = window.read()
-
+		print(event,values)
+		if (event == "_POSPONER_"):
+			print ("Falta resolver funcionalidad")
 		
 		
 		#Desactivo las fichas de la mano una vez que seleccioné una.
 		mano_propia.deshabilitar(window)
-		if (event != "PASAR TURNO") :
-			
-			coordenadas_mano[event] = window[event].ButtonText
-			jugador1.cant_fichas = jugador1.cant_fichas - 1
-			window[list(coordenadas_mano)[-1]].update(text = "")
-
-			tablero.habilitar_botones(window,coordenadas_tablero)
-					
-			event, values = window.read()
-			window[event].update(text = (list(coordenadas_mano.values())[-1]))
-			tablero.estado_botones(window,True)
-			mano_propia.habilitar(window,coordenadas_mano)
-			
-			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
-			print(coordenadas_mano)
-		else:
+		if (event == "_PASARTURNO_") :
 			jugador1.turno = False
 			palabra_existe(coordenadas_mano)
 			print(list(coordenadas_mano.keys()))
@@ -175,7 +162,24 @@ while True:
 				del coordenadas_tablero[x]
 			for x in list(coordenadas_mano.keys()):
 				del coordenadas_mano[x]
-			print(coordenadas_mano)
+			
+		else:
+			print("ESTA JUGANDO EN SU TURNO")
+			coordenadas_mano[event] = window[event].ButtonText
+			jugador1.cant_fichas = jugador1.cant_fichas - 1
+			window[list(coordenadas_mano)[-1]].update(text = "")
+			#print("Le paso las coordenadas del tablero: ", coordenadas_tablero)
+			tablero.habilitar_botones(window,coordenadas_tablero)
+					
+			event, values = window.read()
+			window[event].update(text = (list(coordenadas_mano.values())[-1]))
+			tablero.estado_botones(window,True)
+			mano_propia.habilitar(window,coordenadas_mano)
+			
+			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
+			#print(coordenadas_mano)
+		
+			
 		print("Fin")
 	
 	

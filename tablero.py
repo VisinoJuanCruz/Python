@@ -105,8 +105,11 @@ class Tablero:
 			for y in range(self.ancho):
 				if ((x ==y) or ((x+y)== self.ancho-1)) :
 					self.matriz[x][y].ButtonColor=('yellow','yellow')
+					
 				if ((x == 0) or (x==7) or (x==14)) and ((y == 0) or (y==7) or (y==14)):
 					self.matriz[x][y].ButtonColor=('black','black')
+					#self.matriz[x][y].ImageFilename="./IconosFichas/descuento.png"
+					#self.matriz[x][y].ImageSize=(43,43)
 				if ((x ==7) and (y==7)):
 					self.matriz[x][y].ButtonColor=('red','red')
 
