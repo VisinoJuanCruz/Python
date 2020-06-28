@@ -22,18 +22,18 @@ layout = [[sg.Text("")],
 
 window = sg.Window("Scrable Python2020", layout,size =(800,600))
 
-
-while True:
+program = True
+while program:
 	event,values = window.read()
-	print(event,values)
+	
 	if event is "_COMENZAR_":
-		window.close()
+		
 		game.iniciar()
 	if event is "_CONFIG_":
-		window.close()
+		
 		config.iniciar()
 	if event is "_EXIT_":
-		window.close()
+		program= False
 	
 
 window.close()
