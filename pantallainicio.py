@@ -99,8 +99,8 @@ jugador1 = jugador.Jugador()
 maquina = jugador.Jugador()
 
 
-repartir_fichas(maquina)
-repartir_fichas(jugador1)
+mano_rival.repartir_fichas(maquina)
+mano_propia.repartir_fichas(jugador1)
 
 
 punto = 100
@@ -164,22 +164,23 @@ while True:
 				del coordenadas_mano[x]
 			
 		else:
-			print("ESTA JUGANDO EN SU TURNO")
-			coordenadas_mano[event] = window[event].ButtonText
-			jugador1.cant_fichas = jugador1.cant_fichas - 1
-			window[list(coordenadas_mano)[-1]].update(text = "")
-			#print("Le paso las coordenadas del tablero: ", coordenadas_tablero)
-			tablero.habilitar_botones(window,coordenadas_tablero)
-					
-			event, values = window.read()
-			window[event].update(text = (list(coordenadas_mano.values())[-1]))
-			tablero.estado_botones(window,True)
-			mano_propia.habilitar(window,coordenadas_mano)
-			
-			coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
+			if event in mano_propia.fichas:
+				print("ESTA JUGANDO EN SU TURNO")
+				coordenadas_mano[event] = window[event].ButtonText
+				jugador1.cant_fichas = jugador1.cant_fichas - 1
+				window[list(coordenadas_mano)[-1]].update(text = "")
+				#print("Le paso las coordenadas del tablero: ", coordenadas_tablero)
+				tablero.habilitar_botones(window,coordenadas_tablero)
+			if event in tablero.matriz:			
+				event, values = window.read()
+				window[event].update(text = (list(coordenadas_mano.values())[-1]))
+				tablero.estado_botones(window,True)
+				mano_propia.habilitar(window,coordenadas_mano)
+				coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
 			#print(coordenadas_mano)
 		
-			
+		print(coordenadas_tablero)
+		print(coordenadas_mano)
 		print("Fin")
 	
 	

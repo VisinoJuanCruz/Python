@@ -1,6 +1,7 @@
 class Jugador:
 	#Atributos
-	def __init__(self):
+	def __init__(self,nombre):
+		self.nombre = nombre
 		self.fichas = []
 		self.cant_fichas= 0
 		self.cant_puntos = 0
@@ -26,7 +27,8 @@ class Jugador:
 	def sumar_ficha(self):
 		self.cant_fichas += 1
 
-	
+	def restar_ficha(self):
+		self.cant_fichas -= 1
 
 	def sumar_puntos(self,cant):
 		self.cant_puntos +=cant

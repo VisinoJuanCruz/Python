@@ -12,6 +12,32 @@ def selecciono_random(letras_disponibles):
 	letras_disponibles.remove(letra)
 	return letra
 
+def repartir_fichas(jugador,mano):
+		
+	while jugador.cant_fichas < len(mano.fichas[0]):
+		for x in range(len(mano.fichas[0])):
+			if mano.fichas[0][x].ButtonText == "":
+				letra = selecciono_random(letras_disponibles).upper()
+				mano.fichas[0][x].ButtonText = letra
+				#window[mano.fichas[0][x].Key].Update(text=letra)
+				jugador.sumar_ficha()
+		
+
+#window[list(coordenadas_mano)[-1]].update(text = "")
+#for x in range(len(mano_propia.fichas[0])):
+#			print(mano_propia.fichas[0][x].Key)
+
+"""
+def devolver_fichas(jugador,mano,window):
+	
+	while jugador.cant_fichas != len(mano.fichas[0]):
+		for x in range(len(mano.fichas[0])):
+			if mano.fichas[0][x].ButtonText != "":
+				letras_disponibles.append(mano.fichas[0][x].ButtonText)
+				window[mano_propia.fichas[0][x].Key].Update(text="")
+				mano.fichas[0][x].ButtonText = ""
+				jugador.restar_ficha()
+"""
 
 
 class Mano:
