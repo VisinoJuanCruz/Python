@@ -1,1 +1,2 @@
-python3 pantallainicio.py
+Ejecutar en terminal:
+python3 bienvenida.py
