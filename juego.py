@@ -44,6 +44,10 @@ def iniciar():
 		'y': {'cantidad': 1, 'valor': 4},
 		'z': {'cantidad': 1, 'valor': 10},
 	}
+
+	def actualizar_puntos(listbox,puntos):
+		for x in list(puntos):
+			listbox.Update(x)
 	"""
 	letras_disponibles = ['a','a','a','a','a','a','a','a','a','a','a','b','b','b','c','c','c','c','d','d','d','d',
 	'e','e','e','e','e','e','e','e','e','e','e','f','f','g','g','h','h','i','i','i','i','i','i','i','i','j','j',
@@ -55,34 +59,16 @@ def iniciar():
 		for x in diccionario.values():
 			palabra += x
 		if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
-			print(palabra , " EXISTE")
+			return True
 
-		else:print(palabra ," NO EXISTE")
-	"""
-	def selecciono_random(letras_disponibles):
-		letra = random.choice(letras_disponibles)
-		letras_disponibles.remove(letra)
-		bolsa_fichas[letra]['cantidad'] -= 1
-		return letra
-	"""
-
-
+		else:return False
 	
-
-	"""
-	def reponer_fichas(window,estructura):
-		for x in estructura:
-			window[x].update(text = selecciono_random(letras_disponibles).upper())
-"""
 
 	mano_rival = mano.Mano(True)
 	mano_propia = mano.Mano(False)
 	tablero =  table.Tablero(ALTO,ANCHO)
 
-	#fichas_del_rival
-	#mano_rival =  mano_rival.fichas
-	#fichas_del_jugador
-	#mano_propia =  mano_propia.fichas	
+	
 
 
 	jugador1 = jugador.Jugador('jugador1')
@@ -96,8 +82,7 @@ def iniciar():
 
 	punto = 100
 
-	#layout = [[sg.Text('ScrabbleAR GAME',size=(15,0),justification='center', font=("Helvetica", 25))]]
-	#layout += [[sg.Text("")]]
+	
 	layout=mano_rival.fichas
 	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJERIVAL-", size=(25,0))]]
 	layout+=tablero.matriz
@@ -107,115 +92,139 @@ def iniciar():
 	
 
 
-	#layout+= [[sg.Button("POSPONER", key = "_POSPONER_"),sg.Button("VOLVER AL MENU",key="_VOLVER_")]]
+	
 	window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
 	
 
 
 	comienza = random.choice((jugador1,maquina))
 	comienza.turno = True
+	lista_mano=[]
+	for x in range(len(mano_propia.fichas[0])):
+			lista_mano.append(mano_propia.fichas[0][x].Key)
+	
 
 
-
-#def iniciar():
-	coordenadas = []
-	#MOMENTANEO
+	coordenadas_posibles = []
+	for x in range(len(tablero.matriz)):
+				for y in range(len(tablero.matriz[x])):
+					coordenadas_posibles.append(tablero.matriz[x][y].Key)
+	
 	jugador1.turno = True
-	#print(len(mano_propia.fichas))
+	
 	tablero.asignar_especiales()
 	movimiento = 0
 	program = True
+
 	while program:
 		
+		
+		coordenadas_usadas=[]
 		coordenadas_mano={}
 		coordenadas_tablero = {}
 		sentido = ''
 		
 		while(jugador1.turno):
 			event,values = window.read()
-			print(event,values)
-
-
+			
 
 			if event is "_POSPONER_":
 				jugador1.turno = False
 				sg.Popup("ERROR","Falta resolver funcionalidad")
 				print ("Falta resolver funcionalidad")
-				#break
+				break
 			
 			
-			#Desactivo las fichas de la mano una vez que seleccioné una.
-			#mano_propia.deshabilitar(window)
+			
 			if event is "_VOLVER_":	
 				program = False
-				
+				window.close()
 
 			if event is "_CAMBIARFICHAS_":
 				
-				while jugador1.cant_fichas != 0:
-					for x in range(len(mano_propia.fichas[0])):
-						mano.letras_disponibles.append(mano_propia.fichas[0][x].ButtonText)
-						window[mano_propia.fichas[0][x].Key].Update(text="")
-						mano_propia.fichas[0][x].ButtonText = ""
-						jugador1.restar_ficha()
-				while jugador1.cant_fichas < len(mano_propia.fichas[0]):
-					for x in range(len(mano_propia.fichas[0])):
-						if mano_propia.fichas[0][x].ButtonText == "":
-							letra = mano.selecciono_random(mano.letras_disponibles).upper()
-							mano_propia.fichas[0][x].ButtonText = letra
-							window[mano_propia.fichas[0][x].Key].Update(text=letra)
-							jugador1.sumar_ficha()
-
-
-			if event is "_PASARTURNO_":
-
-				jugador1.turno = False
-				palabra_existe(coordenadas_mano)
-				print(list(coordenadas_mano.keys()))
-				for x in list(coordenadas_mano.keys()):
-					window[x].update(text = "")
+				for x in range(len(mano_propia.fichas[0])):
+						if jugador1.cant_fichas != 0:
+							mano.letras_disponibles.append(mano_propia.fichas[0][x].ButtonText)
+							window[mano_propia.fichas[0][x].Key].Update(text="")
+							jugador1.restar_ficha()
+						
 				
-				mano_propia.reponer(window,list(coordenadas_mano.keys()))
+				for x in range(len(mano_propia.fichas[0])):
+					if jugador1.cant_fichas < len(mano_propia.fichas[0]):
+						if mano_propia.fichas[0][x].ButtonText == "":
+							letra = mano.selecciono_random(mano.letras_disponibles).lower()
+							window[mano_propia.fichas[0][x].Key].Update(text=letra.upper())
+							jugador1.sumar_ficha()
+				
 
-				jugador1.turno = True
-				#event, values = window.read()
+				
+			if event is "_PASARTURNO_":
+				puntaje = 0
+				jugador1.turno = False
+				if palabra_existe(coordenadas_mano):
+					for x in list(coordenadas_mano.keys()):
+						letra = coordenadas_mano[x].lower()
+						for y in list(coordenadas_tablero.keys()):
+							if coordenadas_tablero[y] is x:
+								if tablero.matriz[int(y[0])][int(y[1])].ButtonColor ==('yellow','yellow'):
+									puntaje += int(bolsa_fichas[letra]['valor']) * 2
+								else:
+									if tablero.matriz[int(y[0])][int(y[1])].ButtonColor == ('black','black'):
+										puntaje += int(bolsa_fichas[letra]['valor']) * 0.5
+									else:
+										puntaje += int(bolsa_fichas[letra]['valor'])
+							
+					window["-PUNTAJEPROPIO-"].Update(list(str(puntaje)))
+				else:
+					print(" NO EXISTE")	
+					print(coordenadas_mano)
+					print(coordenadas_tablero)
+					for x in list(coordenadas_mano.keys()):
+						window[x].update(text= coordenadas_mano[x])
+					for y in list(coordenadas_tablero.keys()):
+						window[y].update(text = "")
+					print("YA  ACOMODE TODO")
+
 				for x in list(coordenadas_tablero.keys()):
 					del coordenadas_tablero[x]
 				for x in list(coordenadas_mano.keys()):
 					del coordenadas_mano[x]
-				
-			else:
-				print("ESTA JUGANDO EN SU TURNO")
+				mano_propia.deshabilitar(window)
+				jugador1.turno= True
+			if str(event) in lista_mano:
+				print("SELECCIONO FICHA DE MANO")
 				coordenadas_mano[event] = window[event].ButtonText
-				jugador1.cant_fichas = jugador1.cant_fichas - 1
+				jugador1.restar_ficha()
 				window[list(coordenadas_mano)[-1]].update(text = "")
-				#print("Le paso las coordenadas del tablero: ", coordenadas_tablero)
+				mano_propia.deshabilitar(window)
 				tablero.habilitar_botones(window,coordenadas_tablero)
-						
-				event, values = window.read()
+				print(coordenadas_mano)
 				
+				
+				
+			if event in coordenadas_posibles:
+				coordenadas_posibles.remove(event)
+				print("PUSO FICHA SELECCIONADA EN TABLERO")
 				window[event].update(text = (list(coordenadas_mano.values())[-1]))
 				tablero.estado_botones(window,True)
 				mano_propia.habilitar(window,coordenadas_mano)
 				
 				coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
-				#print(coordenadas_mano)
-			
-			print(event,values)
-			print("Fin")
-		window.close()
-		
-		
-		
-		
-		
-		
-		
-		
-
-
-
-		
-		
+					
 	window.close()
+
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+		
+		
+
 

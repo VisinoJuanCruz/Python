@@ -66,6 +66,13 @@ class Mano:
 		for x in self.fichas[0]:
 			window[x.Key].Update(disabled = estado)
 
+	def nueva_mano(self,window):
+		for x in range(len(self.fichas[0])):
+			print(x)
+			if self.fichas[0][x].ButtonText != "":
+				letras_disponibles.append(self.fichas[0][x].ButtonText)
+				window[self.fichas[0][x]].update(text=selecciono_random(letras_disponibles).upper())
+
 	def reponer(self,window,estructura):
 		for x in estructura:
 			window[x].update(text = selecciono_random(letras_disponibles).upper())
