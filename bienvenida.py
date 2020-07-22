@@ -35,6 +35,7 @@ while program:
 		config.iniciar()
 	if event is "_EXIT_":
 		program= False
+		break
 	event,values = window.read()
 
 window.close()

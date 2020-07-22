@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
-import numpy as np
-import casillero
+
 
 
 #Clase Tablero
@@ -12,42 +11,18 @@ class Tablero:
 		self.alto = alto
 		self.ancho = ancho
 		
+	
 
-	def asignar_casilla_normal(self,cant):
-		self.cant_casilla_normal = cant
-
-	def asignar_casilla_descuento(self,cant):
-		self.cant_casilla_descuento = cant
-
-	def asignar_casilla_con_premio(self,cant):
-		self.cant_casilla_con_premio = cant
-
-	def cant_casilla_normal(self):
-		return self.cant_casilla_normal
-
-	def cant_casilla_con_descuento(self):
-		return self.cant_casilla_con_descuento
-
-	def cant_casilla_con_premio(self):
-		return self.cant_casilla_con_premio
-
-
-	def ocupar_casilla(self,ficha):
-		self.casilla_con_ficha = ficha
-
-	def asignar_casilleros(self):
-		for x in col:
-			for y in row:
-				if (x==y):
-					self.matriz[x,y]= sg.Button.Update(button_color=('white','white'))
 	
 	def estado_botones(self,window,estado):
+		"""Cambia el estado de los botones"""
 		
-		for x in range(self.alto-1):
-			for y in range(self.ancho-1):
+		for x in range(self.alto):
+			for y in range(self.ancho):
 				window[x,y].update(disabled=estado)
 	
 	def sentido(self,lista_keys):
+		"""Verifica en que sentido se va a escribir la palabra"""
 		if len(lista_keys) == 0:
 			return "cero"
 		elif(len(lista_keys) == 1):
@@ -57,7 +32,10 @@ class Tablero:
 			return "vertical"
 		else:
 			return "horizontal"
+	
+
 	def habilitar_botones(self,window,estructura):
+		"""Habilita los casilleros del teclado disponibles para jugar. Dependiendo el sentido en el que el jugador este formando la palabra"""
 
 		lista_keys = list(estructura.keys())
 		
@@ -77,6 +55,7 @@ class Tablero:
 		
 		
 	def asignar_especiales(self):
+		"""Asigna casilleros con descuento y con premio"""
 		for x in range(self.alto):
 			for y in range(self.ancho):
 				if ((x ==y) or ((x+y)== self.ancho-1)) :
