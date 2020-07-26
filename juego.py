@@ -14,13 +14,16 @@ def iniciar():
 	ANCHO=15
 
 	bolsa_letras = {}
-	diccionario_maquina={"0":"","1":"","2":"","3":"","4":"","5":"","6":"",}
-	diccionario_jugador1= {"0":"","11":"","22":"","33":"","44":"","55":"","66":"",}
+	diccionario_maquina={"0":"","1":"","2":"","3":"","4":"","5":"","6":""}
+	diccionario_jugador1= {"00":"","11":"","22":"","33":"","44":"","55":"","66":""}
 	diccionario_tablero = {}
 	print(bolsa_letras)
 	for x in range(ALTO):
 		for y in range(ANCHO):
 			diccionario_tablero[x,y] = ""
+
+
+	print(diccionario_tablero)
 
 	bolsa_fichas = {
 		
