@@ -36,36 +36,37 @@ def iniciar():
 		event,values = window.read()
 		
 		if event is "_GUARDAR_":
-			#print(values)
-			#print(values)
 			bolsa_letras={}
-			info_letra = {'cantidad':"",'valor':""}
 			letras_existentes = ('A','B','C','D','E','F','G','H','I','J','K','L','LL','M','N','Ñ','O','P','Q','R','RR','S','T','U','V','W','X','Y','Z')
 			for letra in letras_existentes:
-				bolsa_letras[letra] = info_letra
+				bolsa_letras[letra] = {'cantidad':"",'valor':""}
 			
-			print("BOLSA LETRAS: ",bolsa_letras)
-			print(values)
+			
 			for x in values:
-
-				if (x[0:4] == 'CANT'):
+				
+				if x[0:4] == "CANT":
 					try:
-						bolsa_letras[x[5:]]['cantidad']= int(values[x])
+						bolsa_letras[x[5:]]['cantidad'] = int(values[x])
 					except:
-						bolsa_letras[x[5:]]['cantidad']= "NADA"
-
-				elif (x[0:5] == 'VALOR'):
+						print("No hay valor")
+						bolsa_letras[x[5:]]['cantidad'] = 999
+				if x[0:5] == "VALOR":
 					try:
 						bolsa_letras[x[6:]]['valor'] = int(values[x])
 					except:
-						bolsa_letras[x[6:]]['valor']= "NADA"
-						
-				else:
-					print("DIFICULTAD CULO")
+						print("No hay valor")
+						bolsa_letras[x[6:]]['valor'] = 999
+				if x == "DIFICULTAD":
+					try:
+						dificultad = {'DIFICULTAD': int(values['DIFICULTAD'])}
+					except:
+						print("No hay valor")
+
+			
+			
 
 
-			dificultad = {'DIFICULTAD': values['DIFICULTAD']}
-
+			print("BOLSA LETRAS: ",bolsa_letras)
 
 			for x in bolsa_letras:
 				print(x,":",bolsa_letras[x])
