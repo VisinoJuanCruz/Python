@@ -13,50 +13,16 @@ def iniciar():
 	ALTO=15
 	ANCHO=15
 
-	bolsa_letras = {}
+
+	
 	diccionario_maquina={"0":"","1":"","2":"","3":"","4":"","5":"","6":""}
 	diccionario_jugador1= {"00":"","11":"","22":"","33":"","44":"","55":"","66":""}
-	diccionario_tablero = {}
-	print(bolsa_letras)
-	for x in range(ALTO):
-		for y in range(ANCHO):
-			diccionario_tablero[x,y] = ""
+	
 
 
-	print(diccionario_tablero)
+	
 
-	bolsa_fichas = {
-		
-		'A': {'cantidad':11 , 'valor': 1},
-		'B': {'cantidad': 3, 'valor': 3},
-		'C': {'cantidad': 4, 'valor': 2},
-		'D': {'cantidad': 4, 'valor': 2},
-		'E': {'cantidad': 11, 'valor': 1},
-		'F': {'cantidad': 2, 'valor': 4},
-		'G': {'cantidad': 2, 'valor': 2},
-		'H': {'cantidad': 2, 'valor': 4},
-		'I': {'cantidad': 6, 'valor': 1},
-		'J': {'cantidad': 2, 'valor': 6},
-		'K': {'cantidad': 1, 'valor': 8},
-		'L': {'cantidad': 4, 'valor': 1},
-		'LL':{'cantidad': 1, 'valor': 8},
-		'M': {'cantidad': 3, 'valor': 3},
-		'N': {'cantidad': 5, 'valor': 1},
-		'Ñ': {'cantidad': 1, 'valor': 8},
-		'O': {'cantidad': 8, 'valor': 1},
-		'P': {'cantidad': 2, 'valor': 3},
-		'Q': {'cantidad': 1, 'valor': 8},
-		'R': {'cantidad': 4, 'valor': 1},
-		'RR':{'cantidad': 1, 'valor': 8},
-		'S': {'cantidad': 7, 'valor': 1},
-		'T': {'cantidad': 4, 'valor': 1},
-		'U': {'cantidad': 6, 'valor': 1},
-		'V': {'cantidad': 2, 'valor': 4},
-		'W': {'cantidad': 1, 'valor': 8},
-		'X': {'cantidad': 1, 'valor': 8},
-		'Y': {'cantidad': 1, 'valor': 4},
-		'Z': {'cantidad': 1, 'valor': 10},
-	}
+	
 
 	def actualizar_puntos(puntaje):
 		"""Actualiza el puntaje en la Listbox"""
@@ -138,6 +104,7 @@ def iniciar():
 	mano_rival = mano.Mano(True)
 	mano_propia = mano.Mano(False)
 	tablero =  table.Tablero(ALTO,ANCHO)
+	tablero.crear_diccionario()
 	jugador1 = jugador.Jugador('jugador1')
 	maquina = jugador.Jugador('maquina')
 	mano.repartir_fichas(maquina,mano_rival)
@@ -181,11 +148,15 @@ def iniciar():
 
 	while program:
 		
+		
+		print("DICCIONARIO DEL TABLERO: ",tablero.diccionario)
+
 		coordenadas_usadas=[]
 		coordenadas_mano={}
 		coordenadas_tablero = {}
 		sentido = ''
 		
+
 		if comienza == maquina:
 			event,values = window.read()
 			print("TURNO DE LA MAQUINA")

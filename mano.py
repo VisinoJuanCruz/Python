@@ -1,12 +1,20 @@
 import PySimpleGUI as sg
 import random
+import json
+
+with open('configuration.json', 'r') as bolsa:
+	bolsa_letras = json.load(bolsa)
+
+	bolsa.close()	
 
 
-"""Hice esta estructura porque haciendo un random en la bolsa de fichas, todas las letras tenian la misma probabilidad de salir"""
-letras_disponibles = ['a','a','a','a','a','a','a','a','a','a','a','b','b','b','c','c','c','c','d','d','d','d',
-'e','e','e','e','e','e','e','e','e','e','e','f','f','g','g','h','h','i','i','i','i','i','i','i','i','j','j',
-'k','l','l','l','l','m','m','m','n','n','n','n','n','o','o','o','o','o','o','o','o','p','p','q','r',
-'r','r','r','rr','s','s','s','s','s','s','s','t','t','t','t','u','u','u','u','u','u','v','v','w','x','y','z']
+#Creo la bolsa con las letras disponibles
+letras_disponibles = []
+for letra in bolsa_letras:
+	for cantidad in range(bolsa_letras[letra]['cantidad']):
+		letras_disponibles.append(letra)
+
+
 
 def selecciono_random(letras_disponibles):
 	"""Retorna una letra sacada al azar de 'letras_disponibles'"""
@@ -23,12 +31,23 @@ def repartir_fichas(jugador,mano):
 				mano.fichas[0][x].ButtonText = letra
 				#window[mano.fichas[0][x].Key].Update(text=letra)
 				jugador.sumar_ficha()
+
+def repartir_fichas2(jugador,mano):
+	"""Reparte fichas al jugador y la mano pasada como parametro"""
+	while jugador.cant_fichas < len(mano.fichas[0]):
+		for x in range(len(mano.fichas[0])):
+			if mano.fichas[0][x].ButtonText == "":
+				letra = selecciono_random(letras_disponibles).upper()
+				mano.fichas[0][x].ButtonText = letra
+				#window[mano.fichas[0][x].Key].Update(text=letra)
+				jugador.sumar_ficha()
 		
 
 class Mano:
 	def __init__(self,booleano):
 		self.fichas = [[sg.Button(str(""),size=(3, 3), pad=(0,0), border_width=1, disabled = booleano,
 			font='any 8', key=(col)) for col in range(7)] for row in range(1)]
+		
 		
 		
 		

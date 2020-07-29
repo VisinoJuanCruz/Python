@@ -8,18 +8,26 @@ class Tablero:
 	def __init__(self,alto,ancho):
 		self.matriz = [[sg.Button(str(""),size=(3, 3),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
 			font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
+		
+		self.diccionario = {}
+
 		self.alto = alto
 		self.ancho = ancho
 		
-	
-
+		
+	def crear_diccionario(self):
+		for x in range(self.ancho):
+			for y in range(self.alto):
+				self.diccionario[x,y] = ""
 	
 	def estado_botones(self,window,estado):
 		"""Cambia el estado de los botones"""
 		
+
 		for x in range(self.alto):
 			for y in range(self.ancho):
-				window[x,y].update(disabled=estado)
+				if self.diccionario[x,y] == "":
+					window[x,y].update(disabled=estado)
 	
 	def sentido(self,lista_keys):
 		"""Verifica en que sentido se va a escribir la palabra"""

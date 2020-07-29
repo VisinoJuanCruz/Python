@@ -1,1 +1,8 @@
-{'A': {'cantidad': 1, 'valor': 1}, 'B': {'cantidad': 4, 'valor': 4}, 'C': {'cantidad': 2345, 'valor': 1}, 'D': {'cantidad': 1, 'valor': 1}, 'E': {'cantidad': 2, 'valor': 4}, 'F': {'cantidad': 4, 'valor': 1}, 'G': {'cantidad': 2, 'valor': 2}, 'H': {'cantidad': 3, 'valor': 4}, 'I': {'cantidad': 21, 'valor': 2}, 'J': {'cantidad': 999, 'valor': 1}, 'K': {'cantidad': 1, 'valor': 3}, 'L': {'cantidad': 3, 'valor': 2}, 'LL': {'cantidad': 3, 'valor': 3}, 'M': {'cantidad': 2, 'valor': 3}, 'N': {'cantidad': 53, 'valor': 3}, 'Ñ': {'cantidad': 999, 'valor': 2}, 'O': {'cantidad': 3, 'valor': 2}, 'P': {'cantidad': 2, 'valor': 3}, 'Q': {'cantidad': 4, 'valor': 4}, 'R': {'cantidad': 1, 'valor': 2}, 'RR': {'cantidad': 32, 'valor': 4}, 'S': {'cantidad': 999, 'valor': 1}, 'T': {'cantidad': 4, 'valor': 1}, 'U': {'cantidad': 1, 'valor': 4}, 'V': {'cantidad': 5, 'valor': 1}, 'W': {'cantidad': 2, 'valor': 1}, 'X': {'cantidad': 2, 'valor': 51}, 'Y': {'cantidad': 999, 'valor': 5}, 'Z': {'cantidad': 5, 'valor': 5}}1
+import json
+
+with open('configuration.json', 'r') as bolsa_letras:
+	bolsa = json.load(bolsa_letras)
+
+bolsa_letras.close()
+
+print("imprimo bolsa: ",bolsa)
