@@ -41,8 +41,29 @@ def repartir_fichas2(jugador,mano):
 				jugador.fichas[x] = letra
 				#window[mano.fichas[0][x].Key].Update(text=letra)
 				jugador.sumar_ficha()
+	print("El jugador ",jugador.nombre," queda con ",jugador.cant_fichas," fichas.")
 
-
+def cambiar_mano(jugador):
+	print("La mano de ",jugador.nombre," estaba así: ",jugador.fichas)
+	while jugador.cant_fichas != 0:
+		for x in jugador.fichas:
+			letras_disponibles.append(jugador.fichas[x])
+			jugador.fichas[x] = ""
+			jugador.restar_ficha()
+	
+		#mano.letras_disponibles.append(mano_propia.fichas[0][x].ButtonText.lower())
+		#window[mano_propia.fichas[0][x].Key].Update(text="")
+	while jugador.cant_fichas != 7:
+		for x in jugador.fichas:
+			letra = selecciono_random(letras_disponibles)
+			jugador.fichas[x] = letra
+			#window[mano_propia.fichas[0][x].Key].Update(text=letra.upper())
+			jugador.sumar_ficha()
+	print("La mano de ",jugador.nombre," quedó así: ",jugador.fichas)
+	
+def actualizar(window,jugador):
+	for x in jugador.fichas.keys():
+		window[int(x)].Update(text = jugador.fichas[x])
 
 
 class Mano:

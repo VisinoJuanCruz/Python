@@ -54,6 +54,7 @@ def iniciar():
 		palabra = ""
 		for x in diccionario.values():
 			palabra += x
+		print("LA PALABRA FORMADA ES : ",palabra)
 		if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
 			return True
 
@@ -233,7 +234,8 @@ def iniciar():
 			#CAMBIAR FICHAS
 			if event is "_CAMBIARFICHAS_":
 				#jugador1.turno = False
-				cambiar_mano(window,jugador1)
+				mano.cambiar_mano(jugador1)
+				mano.actualizar(window,jugador1)
 				event,values = window.read()
 			
 
