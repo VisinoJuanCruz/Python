@@ -14,11 +14,11 @@ def iniciar():
 	ANCHO=15
 
 
-	
+	"""
 	diccionario_maquina={"0":"","1":"","2":"","3":"","4":"","5":"","6":""}
 	diccionario_jugador1= {"00":"","11":"","22":"","33":"","44":"","55":"","66":""}
-	
-
+	"""
+	bolsa_fichas = mano.bolsa_letras
 
 	
 
@@ -32,7 +32,7 @@ def iniciar():
 			for y in list(coordenadas_tablero.keys()):
 				if coordenadas_tablero[y] is x:
 					if tablero.matriz[int(y[0])][int(y[1])].ButtonColor ==('yellow','yellow'):
-						puntaje += int(bolsa_fichas[letra.upper()]['valor']) * 2
+						puntaje += (int(bolsa_fichas[letra.upper()]['valor'])) * 2
 					else:
 						if tablero.matriz[int(y[0])][int(y[1])].ButtonColor == ('black','black'):
 							puntaje += int(bolsa_fichas[letra.upper()]['valor']) * 0.5
@@ -77,15 +77,27 @@ def iniciar():
 					window[mano_propia.fichas[0][x].Key].Update(text=letra.upper())
 					jugador1.sumar_ficha()
 
+	def actualizar_window(window,jugador):
+		for x in jugador.fichas.keys():
+			window[int(x)].Update(text = jugador.fichas[x])
+
+
+
 	def selecciono_ficha_mano():
-		return str(event) in lista_mano
+		try:
+			return int(event) in lista_mano
+		except:
+			return False
 
 	def selecciono_casillero():
 		return event in coordenadas_posibles
 
 	def preparo_tablero():
 		"""Descuenta ficha, habilita tablero, deshabilita la mano."""
-		coordenadas_mano[event] = window[event].ButtonText
+		
+		var = str(event)
+		
+		coordenadas_mano[event] = jugador1.fichas[var]
 		jugador1.restar_ficha()
 		window[list(coordenadas_mano)[-1]].update(text = "")
 		mano_propia.deshabilitar(window)
@@ -105,19 +117,36 @@ def iniciar():
 	mano_propia = mano.Mano(False)
 	tablero =  table.Tablero(ALTO,ANCHO)
 	tablero.crear_diccionario()
+	
 	jugador1 = jugador.Jugador('jugador1')
 	maquina = jugador.Jugador('maquina')
-	mano.repartir_fichas(maquina,mano_rival)
-	mano.repartir_fichas(jugador1,mano_propia)
 
+	diccionario_jugador1 = {}
+	diccionario_maquina = {}
+
+	
+	for x in range(len(mano_rival.fichas[0])):
+		diccionario_maquina[str(mano_rival.fichas[0][x].Key)] = ""
+
+	for x in range(len(mano_propia.fichas[0])):
+		diccionario_jugador1[str(mano_propia.fichas[0][x].Key)] = ""
+
+	jugador1.crear_fichas(diccionario_jugador1)
+	maquina.crear_fichas(diccionario_maquina)
+	
+
+	
+	#print(mano_propia.fichas[0][0].Key)
+	#print(mano_rival.fichas[0][0].Key)
+	
 
 	#DEFINO EL LAYUOT
-	layout=mano_rival.fichas
-	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJERIVAL-", size=(25,0))]]
-	layout+=tablero.matriz
+	layout=mano_propia.fichas
 	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJEPROPIO-", size=(25,0))]]
-	layout+=mano_propia.fichas
-	layout+=[[sg.Button("PASAR TURNO",key="_PASARTURNO_"),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_"),sg.Button("POSPONER", key = "_POSPONER_"),sg.Button("VOLVER AL MENU",key="_VOLVER_")]]
+	layout+=tablero.matriz
+	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJERIVAL-", size=(25,0))]]
+	layout+=mano_rival.fichas
+	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_"),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_"),sg.Button("POSPONER", key = "_POSPONER_"),sg.Button("VOLVER AL MENU",key="_VOLVER_")]]
 	
 	window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
 
@@ -144,34 +173,53 @@ def iniciar():
 	movimiento = 0
 	program = True
 
+	#
 	
 
 	while program:
-		
-		
-		print("DICCIONARIO DEL TABLERO: ",tablero.diccionario)
 
+		
+
+		event,values = window.read()
+		if event == "_COMENZAR_":
+			#comienza = random.choice((jugador1,maquina))
+			#comienza.turno = True
+			jugador1.turno = True
+			mano.repartir_fichas2(maquina,mano_rival)
+			mano.repartir_fichas2(jugador1,mano_propia)
+			for x in jugador1.fichas.keys():
+				window[int(x)].Update(text = jugador1.fichas[x])
+				
 		coordenadas_usadas=[]
 		coordenadas_mano={}
 		coordenadas_tablero = {}
 		sentido = ''
 		
-
-		if comienza == maquina:
-			event,values = window.read()
-			print("TURNO DE LA MAQUINA")
+		
+		"""
+		if (comienza == maquina) or (comienza == jugador1):
+			
+			
+			
+			
 			comienza.turno = False
 			comienza = jugador1
 			jugador1.turno = True
+			
+			
+			for x in jugador1.fichas.keys():
+				print(x)
+		"""
 		while(jugador1.turno):
 			event,values = window.read()
-
+			
 			
 			#POSPONER JUEGO
 			if event is "_POSPONER_":
 				#jugador1.turno = False
 				sg.Popup("ERROR","Falta resolver funcionalidad")
 				print ("Falta resolver funcionalidad")
+				event,values = window.read()
 				break
 			
 			
@@ -186,6 +234,7 @@ def iniciar():
 			if event is "_CAMBIARFICHAS_":
 				#jugador1.turno = False
 				cambiar_mano(window,jugador1)
+				event,values = window.read()
 			
 
 			#TERMINAR TURNO	
@@ -201,12 +250,20 @@ def iniciar():
 					vacio_diccionario(coordenadas_tablero)
 				mano_propia.deshabilitar(window)
 				jugador1.turno= True
-
+				event,values = window.read()
 			#EL JUGADOR ESTA EN SU TURNO.
 			if selecciono_ficha_mano():
+				#print("SELECCIONO FICHA MANO")
 				preparo_tablero()
+				#print("PREPARÉ CASILLERO")
+				#print("Ahora tengo que leer algo:")
+				event,values = window.read()
+
 			if selecciono_casillero():
+				#print("SELECCIONO CASILLERO")
 				preparo_mano()
+				#print("PREPARE LA MANO")
+				#print("YA PUSE LA FICHA Y ESTOY ESPERANDO A QUE REALICE UNA ACCIONT")
 				
 					
 	window.close()

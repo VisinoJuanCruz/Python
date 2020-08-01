@@ -34,21 +34,23 @@ def repartir_fichas(jugador,mano):
 
 def repartir_fichas2(jugador,mano):
 	"""Reparte fichas al jugador y la mano pasada como parametro"""
-	while jugador.cant_fichas < len(mano.fichas[0]):
-		for x in range(len(mano.fichas[0])):
-			if mano.fichas[0][x].ButtonText == "":
+	while jugador.cant_fichas < len(jugador.fichas):
+		for x in jugador.fichas:
+			if jugador.fichas[x] == "":
 				letra = selecciono_random(letras_disponibles).upper()
-				mano.fichas[0][x].ButtonText = letra
+				jugador.fichas[x] = letra
 				#window[mano.fichas[0][x].Key].Update(text=letra)
 				jugador.sumar_ficha()
-		
+
+
+
 
 class Mano:
 	def __init__(self,booleano):
 		self.fichas = [[sg.Button(str(""),size=(3, 3), pad=(0,0), border_width=1, disabled = booleano,
 			font='any 8', key=(col)) for col in range(7)] for row in range(1)]
 		
-		
+
 		
 		
 

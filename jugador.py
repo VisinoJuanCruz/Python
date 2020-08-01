@@ -2,13 +2,16 @@ class Jugador:
 	#Atributos
 	def __init__(self,nombre):
 		self.nombre = nombre
-		self.fichas = []
+		self.fichas = {}
 		self.cant_fichas= 0
 		self.cant_puntos = 0
 		self.turno = False
 
 	#Métodos
 	
+	def crear_fichas(self,diccionario):
+		self.fichas = diccionario
+
 	def cant_fichas(self):
 		"""Retorna la cantidad de fichas."""
 		return self.cant_fichas
