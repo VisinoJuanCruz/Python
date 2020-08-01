@@ -21,7 +21,33 @@ def iniciar():
 	bolsa_fichas = mano.bolsa_letras
 
 	
+	import pattern.es as pt
 
+
+	def busca_palabra():
+		diccionario_maquina={"0":"P","1":"A","2":"E","3":"R","4":"O","5":"B","6":"S"}
+		dict_values = []
+		palabra_a_formar = []
+
+		for x in diccionario_maquina.values():
+			dict_values.append(x.lower())
+		dict_values = set(dict_values)
+
+		palabra_tamaño = -1
+		palabra_a_formar = ""
+		for palabra in pt.spelling:
+			posible = True
+			letras = []
+			#palabra = set(palabra)
+			
+			coinciden = set(palabra) & dict_values
+			#print(coinciden, len(coinciden))
+			if len(coinciden) == len(palabra):
+				if palabra_tamaño < len(palabra):
+					palabra_a_formar = palabra
+					palabra_tamaño = len(palabra_a_formar)
+
+		return(palabra_a_formar)
 	
 
 	def actualizar_puntos(puntaje):
@@ -100,7 +126,10 @@ def iniciar():
 		
 		coordenadas_mano[event] = jugador1.fichas[var]
 		jugador1.restar_ficha()
-		window[list(coordenadas_mano)[-1]].update(text = "")
+		print("La letra en la posicion :", var, "es: ", jugador1.fichas[var])
+		jugador1.fichas[var] = ""
+		print("La letra en la posicion :", var, "ahora es: ", jugador1.fichas[var])
+		window[list(coordenadas_mano)[-1]].update(disabled = True)
 		mano_propia.deshabilitar(window)
 		tablero.habilitar_botones(window,coordenadas_tablero)
 
@@ -112,7 +141,8 @@ def iniciar():
 		mano_propia.habilitar(window,coordenadas_mano)
 		coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
 
-	
+	def turno_maquina():
+
 
 	mano_rival = mano.Mano(True)
 	mano_propia = mano.Mano(False)
@@ -237,6 +267,8 @@ def iniciar():
 				mano.cambiar_mano(jugador1)
 				mano.actualizar(window,jugador1)
 				event,values = window.read()
+				
+				
 			
 
 			#TERMINAR TURNO	
@@ -245,6 +277,16 @@ def iniciar():
 				jugador1.turno = False
 				if palabra_existe(coordenadas_mano):
 					actualizar_puntos(puntaje)
+					mano.actualizar(window,jugador1)
+
+					print("Despues de repartir las fichas :", jugador1.fichas)
+					mano.repartir_fichas2(jugador1,mano_propia)
+					
+					mano.actualizar(window,jugador1)
+					print("despues del turno: " , jugador1.fichas)
+
+
+
 				else:
 					sg.Popup("ERROR","La palabra ingresada no existe")
 					recupero_datos()
