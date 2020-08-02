@@ -24,8 +24,8 @@ def iniciar():
 	import pattern.es as pt
 
 
-	def busca_palabra():
-		diccionario_maquina={"0":"P","1":"A","2":"E","3":"R","4":"O","5":"B","6":"S"}
+	def busca_palabra(diccionario_maquina):
+		#diccionario_maquina={"0":"P","1":"A","2":"E","3":"R","4":"O","5":"B","6":"S"}
 		dict_values = []
 		palabra_a_formar = []
 
@@ -47,7 +47,66 @@ def iniciar():
 					palabra_a_formar = palabra
 					palabra_tamaño = len(palabra_a_formar)
 
-		return(palabra_a_formar)
+		return palabra_a_formar
+
+	def busca_lugar_en_tablero(palabra_a_formar):
+		#palabra_a_formar = "123456789"
+		
+		se_puede = False
+		while not se_puede:
+			se_puede = True
+
+			casillero = random.choice(list(tablero.diccionario.keys()))	
+			print("X : ",casillero[0])
+			print("Y : ",casillero[1])
+			print("PRIMERO VERTICAL")
+			for x in range(len(palabra_a_formar)):
+				try:
+					tablero.diccionario[(casillero[0]+x,casillero[1])]
+					if  not ((tablero.diccionario[(casillero[0]+x,casillero[1])] == "") and se_puede):
+						se_puede = False
+					else:
+						print((casillero[0]+x,casillero[1]))
+				except:
+					se_puede = False
+			if se_puede:
+				direccion = "vertical"
+				retorno = (casillero,"vertical")
+				break
+			if not se_puede:
+				se_puede = True	
+				print("AHORA HORIZONTAL")
+				for y in range(len(palabra_a_formar)):
+					try:
+						tablero.diccionario[(casillero[0],casillero[1]+y)]
+						if  not ((tablero.diccionario[(casillero[0],casillero[1]+y)] == "") and se_puede):
+							se_puede = False
+						else:
+							print((casillero[0],casillero[1]+y))
+					except:
+						se_puede = False
+			if se_puede:
+				retorno = (casillero,"horizontal")
+				break
+		return retorno
+
+	def escribo_palabra(tupla,palabra_a_formar):
+		if tupla[1] == "vertical":
+			for x in range(len(palabra_a_formar)):
+				tablero.diccionario[tupla[0][0]+x,tupla[0][1]] = palabra_a_formar[x].upper()
+		else:
+			for y in range(len(palabra_a_formar)):
+				tablero.diccionario[tupla[0][0],tupla[0][1]+y] = palabra_a_formar[y].upper()
+	
+	def turno_maquina():
+		palabra = busca_palabra(maquina.fichas)
+		tupla = busca_lugar_en_tablero(palabra)
+		escribo_palabra(tupla,palabra)
+		tablero.actualizar(window)
+		maquina.turno = False
+		jugador1.turno = True
+
+
 	
 
 	def actualizar_puntos(puntaje):
@@ -141,7 +200,7 @@ def iniciar():
 		mano_propia.habilitar(window,coordenadas_mano)
 		coordenadas_tablero[event] = (list(coordenadas_mano)[-1])
 
-	def turno_maquina():
+	#def turno_maquina():
 
 
 	mano_rival = mano.Mano(True)
@@ -208,10 +267,10 @@ def iniciar():
 	
 
 	while program:
-
 		
-
+		#busca_lugar_en_tablero()
 		event,values = window.read()
+		tablero.actualizar(window)
 		if event == "_COMENZAR_":
 			#comienza = random.choice((jugador1,maquina))
 			#comienza.turno = True
@@ -293,8 +352,16 @@ def iniciar():
 					vacio_diccionario(coordenadas_mano)
 					vacio_diccionario(coordenadas_tablero)
 				mano_propia.deshabilitar(window)
-				jugador1.turno= True
+				jugador1.turno= False
+				maquina.turno = True
+				turno_maquina()
+
+
+
 				event,values = window.read()
+
+
+
 			#EL JUGADOR ESTA EN SU TURNO.
 			if selecciono_ficha_mano():
 				#print("SELECCIONO FICHA MANO")
@@ -302,6 +369,8 @@ def iniciar():
 				#print("PREPARÉ CASILLERO")
 				#print("Ahora tengo que leer algo:")
 				event,values = window.read()
+				print(event)
+				print(type(event))
 
 			if selecciono_casillero():
 				#print("SELECCIONO CASILLERO")

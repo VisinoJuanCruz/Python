@@ -73,3 +73,6 @@ class Tablero:
 				if ((x ==7) and (y==7)):
 					self.matriz[x][y].ButtonColor=('red','red')
 
+	def actualizar(self,window):
+		for x in self.diccionario:
+			window[x].Update(text = self.diccionario[x])
