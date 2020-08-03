@@ -25,10 +25,10 @@ def iniciar():
 
 
 	def busca_palabra(diccionario_maquina):
-		#diccionario_maquina={"0":"P","1":"A","2":"E","3":"R","4":"O","5":"B","6":"S"}
+		
 		dict_values = []
 		palabra_a_formar = []
-		print("las fichas de la maquina cuando arranca: ", maquina.fichas)
+		#print("las fichas de la maquina cuando arranca: ", maquina.fichas)
 		for x in diccionario_maquina.values():
 			dict_values.append(x.lower())
 		dict_values = set(dict_values)
@@ -41,7 +41,7 @@ def iniciar():
 			#palabra = set(palabra)
 			
 			coinciden = set(palabra) & dict_values
-			#print(coinciden, len(coinciden))
+			##print(coinciden, len(coinciden))
 			if len(coinciden) == len(palabra):
 				if palabra_tamaño < len(palabra):
 					palabra_a_formar = palabra
@@ -50,12 +50,17 @@ def iniciar():
 		for letra in palabra_a_formar:
 			for coorde in diccionario_maquina.keys():
 				if diccionario_maquina[coorde] == letra.upper():
+					#print("diccionario_maquina ANTES: ", diccionario_maquina)
 					maquina.fichas[coorde] = ""
+					#print("diccionario_maquina ahora: ", diccionario_maquina)
+		
+
+
+		#print(len(palabra_a_formar))
+		#print("las fichas de la maquina cuando termina: ", maquina.fichas)
+
 		maquina.cant_fichas -= len(palabra_a_formar)
-		mano.repartir_fichas(maquina,mano_rival)
-		print("las fichas de la maquina cuando termina: ", maquina.fichas)
-
-
+		
 		return palabra_a_formar
 
 	def busca_lugar_en_tablero(palabra_a_formar):
@@ -66,7 +71,8 @@ def iniciar():
 			se_puede = True
 
 			casillero = random.choice(list(tablero.diccionario.keys()))	
-			
+			print("voy a poner :",palabra_a_formar," en el casillero: ",casillero)
+
 			for x in range(len(palabra_a_formar)):
 				try:
 					tablero.diccionario[(casillero[0]+x,casillero[1])]
@@ -93,6 +99,7 @@ def iniciar():
 			if se_puede:
 				retorno = (casillero,"horizontal")
 				break
+
 		return retorno
 
 	def escribo_palabra(tupla,palabra_a_formar):
@@ -105,19 +112,28 @@ def iniciar():
 			for y in range(len(palabra_a_formar)):
 				tablero.diccionario[tupla[0][0],tupla[0][1]+y] = palabra_a_formar[y].upper()
 				coordenadas_palabra[tupla[0][0],tupla[0][1]+y] = palabra_a_formar[y].upper()
-				print(tupla[0][0],tupla[0][1]+y)
+				#print(tupla[0][0],tupla[0][1]+y)
 	
 	def turno_maquina():
 		palabra = busca_palabra(maquina.fichas)
-		#print("mano antes de repartir :", maquina.fichas)
+		##print("mano antes de repartir :", maquina.fichas)
+
 		mano.repartir_fichas(maquina,mano_rival)
-		#print("mano despues de repartir :", maquina.fichas)
+		##print("mano despues de repartir :", maquina.fichas)
 
 		tupla = busca_lugar_en_tablero(palabra)
+
 		escribo_palabra(tupla,palabra)
 		tablero.actualizar(window)
+		##print(tablero.diccionario)
 		maquina.turno = False
 		jugador1.turno = True
+		#print("ACA LLEGO")
+		vacio_diccionario(coordenadas_palabra)
+		vacio_diccionario(coordenadas_tablero)
+		print("TERMINO EL TURNO LA MAQUINA")
+
+
 
 	#def calcular_puntaje_palabra(diccionario):
 	#	for x in palabra:
@@ -146,18 +162,19 @@ def iniciar():
 	
 	def recupero_datos():
 		"""Si la palabra es erronea, se puede usar esta funcion para devolver el tablero y la mano a como estaba en el turno inicialmente. Se le pasa como parametro las coordenadas de tablero y de la mano utilizadas en este turno"""
+		
 		for x in list(coordenadas_palabra.keys()):
-			window[x].update(text= coordenadas_palabra[x])
+			jugador1.fichas[str(x)] = coordenadas_palabra[x]
 		for y in list(coordenadas_tablero.keys()):
-			window[y].update(text = "")
-
+			tablero.diccionario[y]= ""
+		
 
 	def palabra_existe(diccionario):
 		"""Verifica si la palabra pasada existe, se le pasa como parametro un diccionario de tipo {coordenada:letra}, donde la coordenada es la ficha seleccionada de su mano."""
 		palabra = ""
 		for x in diccionario.values():
 			palabra += x
-		#print("LA PALABRA FORMADA ES : ",palabra)
+		##print("LA PALABRA FORMADA ES : ",palabra)
 		if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
 			return True
 
@@ -198,49 +215,107 @@ def iniciar():
 
 	def turno_jugador():
 		
-		window["_PASARTURNO_"].Update(disabled = False)
-		window["_CAMBIARFICHAS_"].Update(disabled = False)
-		
-
-		event , values = window.read()
-		
-		while event != "_PASARTURNO_" or event != "_POSPONER_":
-
-			window["_PASARTURNO_"].Update(disabled = True)
-			window["_CAMBIARFICHAS_"].Update(disabled = True)
-			print("ENTRO")
-
-			if event is "_CAMBIARFICHAS_":
-				mano.cambiar_mano(jugador1)
-				mano.actualizar(window,jugador1)
-			
-			print("KEKEKE: ", (str(event) in jugador1.fichas.keys()))
-			if str(event) in jugador1.fichas.keys():
-				print("TOQUE FICHA")
-				coordenadas_palabra[event] = jugador1.fichas[str(event)]
-				#print("coordenadas de la palabra: ", coordenadas_palabra)
-				jugador1.restar_ficha()
-				jugador1.fichas[str(event)] = ""
-				mano_propia.deshabilitar(window)
-				tablero.habilitar_botones(window,coordenadas_tablero)
-				tablero.actualizar(window)
-
-			event, values = window.read()
-			print(type(event))
-			print(type(tablero.diccionario.keys()))
-			print("LOLOLOLOL ? :", (event in tablero.diccionario))
-			if event in tablero.diccionario:
-				print("AHORA TOQUE TABLERO")
-				coordenadas_tablero[event] = (list(coordenadas_palabra.values())[-1])
-				tablero.diccionario[event] = (list(coordenadas_palabra.values())[-1])
-				tablero.actualizar(window)
-				tablero.estado_botones(window,True)
-				mano_propia.habilitar(window,coordenadas_palabra)
-				coordenadas_tablero[event] = (list(coordenadas_palabra)[-1])
-
+		while jugador1.turno:
 			window["_PASARTURNO_"].Update(disabled = False)
 			window["_CAMBIARFICHAS_"].Update(disabled = False)
 			
+
+			event , values = window.read()
+			
+			while (event != "_PASARTURNO_") and (event != "_POSPONER_"):
+				#print("YA SELECCIONE")
+				#print(event != "_PASARTURNO_")
+				
+				window["_CAMBIARFICHAS_"].Update(disabled = True)
+				
+
+				if event is "_CAMBIARFICHAS_":
+					mano.cambiar_mano(jugador1)
+					mano.actualizar(window,jugador1)
+					event,values=window.read()
+				
+				
+
+
+				
+				if str(event) in jugador1.fichas.keys():
+
+					#print("TOQUE LA FICHA :", event)
+					coordenadas_palabra[event] = jugador1.fichas[str(event)]
+					#print("EL DICT PARA LAS COORDE : ",coordenadas_tablero)
+					jugador1.restar_ficha()
+					jugador1.fichas[str(event)] = ""
+					mano_propia.deshabilitar(window)
+					#print("sentido:",tablero.sentido(list(coordenadas_tablero.keys())))
+					#print("coordenadas del tablero: ",coordenadas_tablero.keys())
+					tablero.estado_botones(window,True)
+					tablero.habilitar_botones(window,coordenadas_tablero)
+
+					tablero.actualizar(window)
+
+					
+				
+				if event in tablero.diccionario:
+					#print("AHORA TOQUE EL CASILLERO : ", event)
+					coordenadas_tablero[event] = (list(coordenadas_palabra.values())[-1])
+					tablero.diccionario[event] = (list(coordenadas_palabra.values())[-1])
+					tablero.actualizar(window)
+					
+					tablero.estado_botones(window,True)
+					mano_propia.habilitar(window,coordenadas_palabra)
+					coordenadas_tablero[event] = (list(coordenadas_palabra)[-1])
+				event, values = window.read()
+
+				#window["_PASARTURNO_"].Update(disabled = False)
+				
+			#print("SALE??????????")
+			print("POR AHORA TIENE ", jugador1.cant_fichas, "FICHAS EL JUGADOR1")
+			if event is "_PASARTURNO_":
+				#print("PASE TURNO")
+				jugador1.turno = False
+				maquina.turno = True
+				#print(coordenadas_palabra)
+				#print("EXISTE? :",str(list(coordenadas_palabra.values())),":" ,palabra_existe(coordenadas_palabra))
+				if palabra_existe(coordenadas_palabra):
+
+					#print("PALABRA QUE EXISTE :", coordenadas_palabra)
+					actualizar_puntos()
+					actualizar_puntajes()
+					mano.actualizar(window,jugador1)
+					print("FICHAS ANTES DE REPARTIR :" , jugador1.fichas)
+					print("Cantidad de fichas antes:", jugador1.cant_fichas)
+					mano.repartir_fichas(jugador1,mano_propia)
+					print("FICHAS DESPUES DE REPARTIR :" , jugador1.fichas)
+					print("Cantidad de fichas despues:", jugador1.cant_fichas)
+
+					mano.actualizar(window,jugador1)
+					#print("despues del turno: " , jugador1.fichas)
+					vacio_diccionario(coordenadas_palabra)
+					vacio_diccionario(coordenadas_tablero)
+					window["_PASARTURNO_"].Update(disabled = True)
+				else:
+					print("NO EXISTE")
+					sg.Popup("ERROR","La palabra ingresada no existe")
+					
+					recupero_datos()
+					tablero.actualizar(window)
+					mano.actualizar(window,jugador1)
+					print("coordendadas_palabra: ", coordenadas_palabra)
+					vacio_diccionario(coordenadas_palabra)
+					vacio_diccionario(coordenadas_tablero)
+
+					#print("coordenadas_palabra",coordenadas_palabra)
+					#print("Coordenadas_tablero",coordenadas_tablero)
+					mano_propia.deshabilitar(window)
+					
+					turno_maquina()
+					vacio_diccionario(coordenadas_palabra)
+					vacio_diccionario(coordenadas_tablero)
+					mano_propia.habilitar(window,coordenadas_palabra)
+					#print(coordenadas_palabra)
+			window["_PASARTURNO_"].Update(disabled = True)
+			window["_CAMBIARFICHAS_"].Update(disabled = True)
+			print("TERMINO EL TURNO EL HUMANO")	
 			
 
 
@@ -252,9 +327,9 @@ def iniciar():
 		coordenadas_palabra[event] = jugador1.fichas[var]
 		
 		jugador1.restar_ficha()
-		#print("La letra en la posicion :", var, "es: ", jugador1.fichas[var])
+		##print("La letra en la posicion :", var, "es: ", jugador1.fichas[var])
 		jugador1.fichas[var] = ""
-		#print("La letra en la posicion :", var, "ahora es: ", jugador1.fichas[var])
+		##print("La letra en la posicion :", var, "ahora es: ", jugador1.fichas[var])
 		#window[list(coordenadas_palabra)[-1]].update(disabled = True)
 		mano_propia.deshabilitar(window)
 		tablero.habilitar_botones(window,coordenadas_tablero)
@@ -263,7 +338,7 @@ def iniciar():
 	def preparo_mano():
 		"""Asigna letra en el tablero, deshabilita tablero, habilita mano."""
 		coordenadas_posibles.remove(event)
-		#print("A VER QUE HAY ACA: ",list(coordenadas_palabra.values())[-1])
+		##print("A VER QUE HAY ACA: ",list(coordenadas_palabra.values())[-1])
 
 		tablero.diccionario[event] = (list(coordenadas_palabra.values())[-1])
 		tablero.actualizar(window)
@@ -271,7 +346,7 @@ def iniciar():
 		tablero.estado_botones(window,True)
 		mano_propia.habilitar(window,coordenadas_palabra)
 		coordenadas_tablero[event] = (list(coordenadas_palabra)[-1])
-		print(tablero.diccionario)
+		#print(tablero.diccionario)
 		
 
 
@@ -301,8 +376,8 @@ def iniciar():
 	
 
 	
-	#print(mano_propia.fichas[0][0].Key)
-	#print(mano_rival.fichas[0][0].Key)
+	##print(mano_propia.fichas[0][0].Key)
+	##print(mano_rival.fichas[0][0].Key)
 	
 
 	#DEFINO EL LAYUOT
@@ -345,7 +420,7 @@ def iniciar():
 		
 		#busca_lugar_en_tablero()
 		event,values = window.read()
-		print("TOCÓ :", event)
+		#print("TOCÓ :", event)
 		tablero.actualizar(window)
 		
 		if event is "_VOLVER_":
@@ -359,31 +434,37 @@ def iniciar():
 			mano.repartir_fichas(maquina,mano_rival)
 			mano.repartir_fichas(jugador1,mano_propia)
 			mano.actualizar(window,jugador1)
+			window["_COMENZAR_"].Update(disabled = True)
+			coordenadas_usadas=[]
+			coordenadas_palabra={}
+			coordenadas_tablero = {}
+			sentido = ''
 			#for x in jugador1.fichas.keys():
 			#	window[int(x)].Update(text = jugador1.fichas[x])
 
-
-		coordenadas_usadas=[]
-		coordenadas_palabra={}
-		coordenadas_tablero = {}
-		sentido = ''
-		
-		print(maquina.turno)
-		print(jugador1.turno)
-		print("IA FICHAS: ",maquina.fichas)
-		print("Jugador FICHAS: ", jugador1.fichas)
+		#print(maquina.turno)
+		#print(jugador1.turno)
+		#print("IA FICHAS: ",maquina.fichas)
+		#print("Jugador FICHAS: ", jugador1.fichas)
 		if maquina.turno:
+			print("ARRANCA MAQUINA")
 			turno_maquina()
+			mano.habilitar(window,jugador1)
 			turno_jugador()
-		else:
-			turno_jugador()
-			turno_maquina()
+			print("MUERE ACA?")
+			#print("despues del turno del jugador: ")
 		
-		"""
-		if (comienza == maquina) or (comienza == jugador1):
+		else:
+			print("ARRANCA JUGADOR 1")
+			mano.habilitar(window,jugador1)
+			turno_jugador()
+			turno_maquina()
+			print("MUERE ACA?")
+
+		#if (comienza == maquina) or (comienza == jugador1):
 			
 			
-			
+			"""
 			
 			comienza.turno = False
 			comienza = jugador1
@@ -391,7 +472,8 @@ def iniciar():
 			
 			
 			for x in jugador1.fichas.keys():
-				print(x)
+				#print(x)
+		"""
 		"""
 		while(jugador1.turno):
 			event,values = window.read()
@@ -401,7 +483,7 @@ def iniciar():
 			if event is "_POSPONER_":
 				#jugador1.turno = False
 				sg.Popup("ERROR","Falta resolver funcionalidad")
-				print ("Falta resolver funcionalidad")
+				#print ("Falta resolver funcionalidad")
 				event,values = window.read()
 				break
 			
@@ -432,21 +514,21 @@ def iniciar():
 					actualizar_puntajes()
 					mano.actualizar(window,jugador1)
 
-					print("Despues de repartir las fichas :", jugador1.fichas)
+					#print("Despues de repartir las fichas :", jugador1.fichas)
 					mano.repartir_fichas(jugador1,mano_propia)
 					
 					mano.actualizar(window,jugador1)
-					print("despues del turno: " , jugador1.fichas)
+					#print("despues del turno: " , jugador1.fichas)
 
 
 
 				else:
 					sg.Popup("ERROR","La palabra ingresada no existe")
 					recupero_datos()
-				print("coordendadas_palabra: ", coordenadas_palabra)
+				#print("coordendadas_palabra: ", coordenadas_palabra)
 				vacio_diccionario(coordenadas_palabra)
 				vacio_diccionario(coordenadas_tablero)
-				print("coordenadas_palabra",coordenadas_palabra)
+				#print("coordenadas_palabra",coordenadas_palabra)
 				mano_propia.deshabilitar(window)
 				jugador1.turno= False
 				maquina.turno = True
@@ -454,7 +536,7 @@ def iniciar():
 				vacio_diccionario(coordenadas_palabra)
 				vacio_diccionario(coordenadas_tablero)
 				mano_propia.habilitar(window,coordenadas_palabra)
-				print(coordenadas_palabra)
+				#print(coordenadas_palabra)
 
 
 
@@ -464,24 +546,24 @@ def iniciar():
 
 			#EL JUGADOR ESTA EN SU TURNO.
 			#if #selecciono_ficha_mano():
-				#print("SELECCIONO FICHA MANO")
+				##print("SELECCIONO FICHA MANO")
 				#preparo_tablero()
-				#print("PREPARÉ CASILLERO")
-				#print("Ahora tengo que leer algo:")
+				##print("PREPARÉ CASILLERO")
+				##print("Ahora tengo que leer algo:")
 				#event,values = window.read()
-				#print(event)
-				#print(type(event))
+				##print(event)
+				##print(type(event))
 
 			#if selecciono_casillero():
-				#print("SELECCIONO CASILLERO")
+				##print("SELECCIONO CASILLERO")
 				#preparo_mano()
-				#print("PREPARE LA MANO")
-				#print("YA PUSE LA FICHA Y ESTOY ESPERANDO A QUE REALICE UNA ACCIONT")
+				##print("PREPARE LA MANO")
+				##print("YA PUSE LA FICHA Y ESTOY ESPERANDO A QUE REALICE UNA ACCIONT")
 				
 					
 	window.close()
 
-		
+		"""
 		
 		
 		

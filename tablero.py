@@ -24,9 +24,9 @@ class Tablero:
 		"""Cambia el estado de los botones"""
 		for x in self.diccionario:
 			if self.diccionario[x] == "":
-				window[x].Update(disabled = False)
+				window[x].Update(disabled = estado)
 			else:
-				window[x].Update(disabled = True)
+				window[x].Update(disabled = True )
 	
 	def sentido(self,lista_keys):
 		"""Verifica en que sentido se va a escribir la palabra"""
@@ -34,6 +34,7 @@ class Tablero:
 			return "cero"
 		elif(len(lista_keys) == 1):
 			return "uno"
+
 
 		elif(lista_keys[-1][0] > lista_keys[-2][0]):
 			return "vertical"
@@ -49,13 +50,17 @@ class Tablero:
 		if self.sentido(lista_keys) == "cero":
 			self.estado_botones(window,False)
 		elif self.sentido(lista_keys) == "uno":
+			#print("Tengo esta coordenada : ",lista_keys[-1])
 			if int(lista_keys[-1][0]+1)<self.alto:
 				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
 			if int(lista_keys[-1][1]+1)<self.ancho:
 				window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 		elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
+			#print("Tengo esta coordenada : ",lista_keys[-1])
+			#print("habilito la coorde vertical : ",(lista_keys[-1][0]+1,lista_keys[-1][1] ))
 			window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
 		elif (self.sentido(lista_keys) == "horizontal") and (lista_keys[-1][1]+1 < self.ancho):
+			#print("Tengo esta coordenada : ",lista_keys[-1][0])
 			window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 			
 	

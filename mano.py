@@ -27,22 +27,25 @@ def selecciono_random(letras_disponibles):
 def repartir_fichas(jugador,mano):
 	"""Reparte fichas al jugador y la mano pasada como parametro"""
 
-	while jugador.cant_fichas < len(jugador.fichas):
+	#print("Acá llega")
+	while jugador.cant_fichas < len(jugador.fichas.keys()):
 		for x in jugador.fichas:
-			
 			if jugador.fichas[x] == "":
+				#print("KEKEKE : ",jugador.cant_fichas)
 				letra = selecciono_random(letras_disponibles).upper()
 				jugador.fichas[x] = letra
 				#window[mano.fichas[0][x].Key].Update(text=letra)
 				jugador.sumar_ficha()
-	print("El jugador ",jugador.nombre," queda con ",jugador.cant_fichas," fichas.")
+	#print("El jugador ",jugador.nombre," queda con ",jugador.cant_fichas," fichas.")
 
 def cambiar_mano(jugador):
-	print("La mano de ",jugador.nombre," estaba así: ",jugador.fichas)
+	#print("La mano de ",jugador.nombre," estaba así: ",jugador.fichas)
 	while jugador.cant_fichas != 0:
 		for x in jugador.fichas:
 			letras_disponibles.append(jugador.fichas[x])
+			print("habia",jugador.fichas[x])
 			jugador.fichas[x] = ""
+			
 			jugador.restar_ficha()
 	
 		#mano.letras_disponibles.append(mano_propia.fichas[0][x].ButtonText.lower())
@@ -51,13 +54,18 @@ def cambiar_mano(jugador):
 		for x in jugador.fichas:
 			letra = selecciono_random(letras_disponibles)
 			jugador.fichas[x] = letra
+			print("En la coodenada : ",x,"de las fichas del jugador, hay",jugador.fichas[x])
 			#window[mano_propia.fichas[0][x].Key].Update(text=letra.upper())
 			jugador.sumar_ficha()
-	print("La mano de ",jugador.nombre," quedó así: ",jugador.fichas)
-	
+	#print("La mano de ",jugador.nombre," quedó así: ",jugador.fichas)
+	print("SE CAMBIO LA MANO DEL JUGADOR : ", jugador)
 def actualizar(window,jugador):
 	for x in jugador.fichas.keys():
 		window[int(x)].Update(text = jugador.fichas[x])
+
+def habilitar(window,jugador1):
+	for x in jugador1.fichas.keys():
+		window[int(x)].Update(disabled = False)
 
 
 class Mano:
