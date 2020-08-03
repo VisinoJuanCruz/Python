@@ -22,12 +22,11 @@ class Tablero:
 	
 	def estado_botones(self,window,estado):
 		"""Cambia el estado de los botones"""
-		
-
-		for x in range(self.alto):
-			for y in range(self.ancho):
-				if self.diccionario[x,y] == "":
-					window[x,y].update(disabled=estado)
+		for x in self.diccionario:
+			if self.diccionario[x] == "":
+				window[x].Update(disabled = False)
+			else:
+				window[x].Update(disabled = True)
 	
 	def sentido(self,lista_keys):
 		"""Verifica en que sentido se va a escribir la palabra"""

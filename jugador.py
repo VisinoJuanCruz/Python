@@ -6,6 +6,7 @@ class Jugador:
 		self.cant_fichas= 0
 		self.cant_puntos = 0
 		self.turno = False
+		self.puntaje = 0
 
 	#Métodos
 	

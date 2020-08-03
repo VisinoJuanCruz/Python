@@ -22,20 +22,14 @@ def selecciono_random(letras_disponibles):
 	letras_disponibles.remove(letra)
 	return letra
 
+
+
 def repartir_fichas(jugador,mano):
 	"""Reparte fichas al jugador y la mano pasada como parametro"""
-	while jugador.cant_fichas < len(mano.fichas[0]):
-		for x in range(len(mano.fichas[0])):
-			if mano.fichas[0][x].ButtonText == "":
-				letra = selecciono_random(letras_disponibles).upper()
-				mano.fichas[0][x].ButtonText = letra
-				#window[mano.fichas[0][x].Key].Update(text=letra)
-				jugador.sumar_ficha()
 
-def repartir_fichas2(jugador,mano):
-	"""Reparte fichas al jugador y la mano pasada como parametro"""
 	while jugador.cant_fichas < len(jugador.fichas):
 		for x in jugador.fichas:
+			
 			if jugador.fichas[x] == "":
 				letra = selecciono_random(letras_disponibles).upper()
 				jugador.fichas[x] = letra
