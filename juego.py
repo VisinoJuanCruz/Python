@@ -26,6 +26,15 @@ def iniciar():
 
 	def busca_palabra(diccionario_maquina):
 		
+		palabras_validas = []
+		for x in pt.spelling:
+			palabras_validas.append(x.lower())
+		for x in pt.verbs:
+			palabras_validas.append(x.lower())
+		for x in pt.lexicon:
+			palabras_validas.append(x.lower())
+
+
 		dict_values = []
 		palabra_a_formar = []
 		#print("las fichas de la maquina cuando arranca: ", maquina.fichas)
@@ -35,7 +44,8 @@ def iniciar():
 
 		palabra_tamaño = -1
 		palabra_a_formar = ""
-		for palabra in pt.spelling:
+		palabras_que_existen = pt
+		for palabra in palabras_validas:
 			posible = True
 			letras = []
 			#palabra = set(palabra)
@@ -47,19 +57,25 @@ def iniciar():
 					palabra_a_formar = palabra
 					palabra_tamaño = len(palabra_a_formar)
 
+		print("LA MAQUINA TIENE: ",diccionario_maquina.values())
 		for letra in palabra_a_formar:
 			for coorde in diccionario_maquina.keys():
 				if diccionario_maquina[coorde] == letra.upper():
 					#print("diccionario_maquina ANTES: ", diccionario_maquina)
 					maquina.fichas[coorde] = ""
+					break
+					#BUCLEBUCLE
 					#print("diccionario_maquina ahora: ", diccionario_maquina)
 		
 
 
 		#print(len(palabra_a_formar))
 		#print("las fichas de la maquina cuando termina: ", maquina.fichas)
-
+		print("La IA tiene ", maquina.cant_fichas, " fichas. ")
 		maquina.cant_fichas -= len(palabra_a_formar)
+		
+		print("La palabra que voy a usar es :", palabra_a_formar, " que mide: ", len(palabra_a_formar))
+		print("Por eso la maquina ahora tiene :", maquina.cant_fichas," fichas.")
 		
 		return palabra_a_formar
 
@@ -117,10 +133,11 @@ def iniciar():
 		#
 	
 	def turno_maquina():
+		print(" LA MANO DE LA MAQUINA ESTA ASI : ", maquina.fichas.values())
 		palabra = busca_palabra(maquina.fichas)
 		
 
-		mano.repartir_fichas(maquina,mano_rival)
+		mano.repartir_fichas(maquina)
 		
 
 		tupla = busca_lugar_en_tablero(palabra)
@@ -191,13 +208,27 @@ def iniciar():
 
 	def palabra_existe(diccionario):
 		"""Verifica si la palabra pasada existe, se le pasa como parametro un diccionario de tipo {coordenada:letra}, donde la coordenada es la ficha seleccionada de su mano."""
+		nivel = 1
 		palabra = ""
 		for x in diccionario.values():
 			palabra += x
-		if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
-			return True
 
-		else:return False
+		if nivel == 1:
+			if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
+				return True
+
+			else:return False
+		else:
+			if nivel == 2:
+				if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon):
+					return True
+				else:
+					return False
+			else:
+				if (palabra.lower() in pt.verbs):
+					return True
+				else:
+					return False
 	
 	def vacio_diccionario(diccionario):
 		"""Vacia el diccionario que se le pase por parametro"""
@@ -293,7 +324,7 @@ def iniciar():
 					actualizar_puntos(jugador1)
 					actualizar_puntajes()
 					mano.actualizar(window,jugador1)
-					mano.repartir_fichas(jugador1,mano_propia)
+					mano.repartir_fichas(jugador1)
 
 					mano.actualizar(window,jugador1)
 					vacio_diccionario(coordenadas_palabra)
@@ -420,8 +451,8 @@ def iniciar():
 		if event == "_COMENZAR_":
 			turno = random.choice((jugador1,maquina))
 			comienza.turno = True
-			mano.repartir_fichas(maquina,mano_rival)
-			mano.repartir_fichas(jugador1,mano_propia)
+			mano.repartir_fichas(maquina)
+			mano.repartir_fichas(jugador1)
 			mano.actualizar(window,jugador1)
 			window["_COMENZAR_"].Update(disabled = True)
 			coordenadas_usadas=[]

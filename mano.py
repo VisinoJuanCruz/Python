@@ -24,19 +24,27 @@ def selecciono_random(letras_disponibles):
 
 
 
-def repartir_fichas(jugador,mano):
+def repartir_fichas(jugador):
 	"""Reparte fichas al jugador y la mano pasada como parametro"""
 
 	
 	while jugador.cant_fichas < len(jugador.fichas.keys()):
+		#print("Entra a este bucle porque el jugador tiene : ", jugador.cant_fichas,"que es menor que =", len(jugador.fichas.keys()))
 		for x in jugador.fichas:
 			if jugador.fichas[x] == "":
-				
-				letra = selecciono_random(letras_disponibles).upper()
-				jugador.fichas[x] = letra
-				
-				jugador.sumar_ficha()
-	
+				try :
+					#print("como la ficha esta vacia, le pongo una letra y le voy a sumar.")
+					print("Antes en :",x,"tenia lo siguiente :",jugador.fichas[x],".")
+					letra = selecciono_random(letras_disponibles).upper()
+					jugador.fichas[x] = letra
+					#print("Tenia esta cantidad de fichas : ", jugador.cant_fichas)
+					jugador.sumar_ficha()
+					print("ahora le sumo 1, y le quedan:", jugador.cant_fichas)
+
+				except:
+					program = False
+					break
+	print("AHORA TIENE : ", jugador.cant_fichas)
 
 def cambiar_mano(jugador):
 	
@@ -57,9 +65,15 @@ def cambiar_mano(jugador):
 			jugador.sumar_ficha()
 	
 def actualizar(window,jugador):
-	for x in jugador.fichas.keys():
-		window[int(x)].Update(text = jugador.fichas[x])
-
+	if jugador.nombre == "jugador1":
+		try:
+			for x in jugador.fichas.keys():
+				ruta = "./IconosFichas/"+jugador.fichas[x]+".png"
+				window[int(x)].Update(text = jugador.fichas[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))
+		except:
+			for x in jugador.fichas.keys():
+				ruta = "./IconosFichas/descuento.png"
+				window[int(x)].Update(text = jugador.fichas[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))
 def habilitar(window,jugador1):
 	for x in jugador1.fichas.keys():
 		window[int(x)].Update(disabled = False)

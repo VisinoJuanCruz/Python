@@ -50,17 +50,16 @@ class Tablero:
 		if self.sentido(lista_keys) == "cero":
 			self.estado_botones(window,False)
 		elif self.sentido(lista_keys) == "uno":
-			#print("Tengo esta coordenada : ",lista_keys[-1])
+			
 			if int(lista_keys[-1][0]+1)<self.alto:
 				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
 			if int(lista_keys[-1][1]+1)<self.ancho:
 				window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 		elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
-			#print("Tengo esta coordenada : ",lista_keys[-1])
-			#print("habilito la coorde vertical : ",(lista_keys[-1][0]+1,lista_keys[-1][1] ))
+			
 			window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
 		elif (self.sentido(lista_keys) == "horizontal") and (lista_keys[-1][1]+1 < self.ancho):
-			#print("Tengo esta coordenada : ",lista_keys[-1][0])
+			
 			window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 			
 	
@@ -79,4 +78,8 @@ class Tablero:
 
 	def actualizar(self,window):
 		for x in self.diccionario:
-			window[x].Update(text = self.diccionario[x])
+			if self.diccionario[x] == "":
+				window[x].Update(text = self.diccionario[x])
+			else:
+				ruta = "./IconosFichas/"+self.diccionario[x]+".png"
+				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))
