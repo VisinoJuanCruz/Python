@@ -1,118 +1,123 @@
 {
-    "A": {
-        "cantidad": 11,
-        "valor": 1
+    "bolsa_letras": {
+        "A": {
+            "cantidad": 11,
+            "valor": 1
+        },
+        "B": {
+            "cantidad": 3,
+            "valor": 3
+        },
+        "C": {
+            "cantidad": 4,
+            "valor": 2
+        },
+        "D": {
+            "cantidad": 4,
+            "valor": 2
+        },
+        "E": {
+            "cantidad": 11,
+            "valor": 1
+        },
+        "F": {
+            "cantidad": 2,
+            "valor": 4
+        },
+        "G": {
+            "cantidad": 2,
+            "valor": 2
+        },
+        "H": {
+            "cantidad": 2,
+            "valor": 4
+        },
+        "I": {
+            "cantidad": 6,
+            "valor": 11
+        },
+        "J": {
+            "cantidad": 2,
+            "valor": 6
+        },
+        "K": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "L": {
+            "cantidad": 4,
+            "valor": 1
+        },
+        "LL": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "M": {
+            "cantidad": 3,
+            "valor": 3
+        },
+        "N": {
+            "cantidad": 5,
+            "valor": 1
+        },
+        "\u00d1": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "O": {
+            "cantidad": 8,
+            "valor": 1
+        },
+        "P": {
+            "cantidad": 2,
+            "valor": 3
+        },
+        "Q": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "R": {
+            "cantidad": 4,
+            "valor": 1
+        },
+        "RR": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "S": {
+            "cantidad": 7,
+            "valor": 1
+        },
+        "T": {
+            "cantidad": 4,
+            "valor": 1
+        },
+        "U": {
+            "cantidad": 6,
+            "valor": 1
+        },
+        "V": {
+            "cantidad": 2,
+            "valor": 4
+        },
+        "W": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "X": {
+            "cantidad": 1,
+            "valor": 8
+        },
+        "Y": {
+            "cantidad": 1,
+            "valor": 4
+        },
+        "Z": {
+            "cantidad": 1,
+            "valor": 10
+        }
     },
-    "B": {
-        "cantidad": 3,
-        "valor": 3
-    },
-    "C": {
-        "cantidad": 4,
-        "valor": 2
-    },
-    "D": {
-        "cantidad": 4,
-        "valor": 2
-    },
-    "E": {
-        "cantidad": 11,
-        "valor": 1
-    },
-    "F": {
-        "cantidad": 2,
-        "valor": 4
-    },
-    "G": {
-        "cantidad": 2,
-        "valor": 2
-    },
-    "H": {
-        "cantidad": 2,
-        "valor": 4
-    },
-    "I": {
-        "cantidad": 6,
-        "valor": 11
-    },
-    "J": {
-        "cantidad": 2,
-        "valor": 6
-    },
-    "K": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "L": {
-        "cantidad": 4,
-        "valor": 1
-    },
-    "LL": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "M": {
-        "cantidad": 3,
-        "valor": 3
-    },
-    "N": {
-        "cantidad": 5,
-        "valor": 1
-    },
-    "\u00d1": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "O": {
-        "cantidad": 8,
-        "valor": 1
-    },
-    "P": {
-        "cantidad": 2,
-        "valor": 3
-    },
-    "Q": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "R": {
-        "cantidad": 4,
-        "valor": 1
-    },
-    "RR": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "S": {
-        "cantidad": 7,
-        "valor": 1
-    },
-    "T": {
-        "cantidad": 4,
-        "valor": 1
-    },
-    "U": {
-        "cantidad": 6,
-        "valor": 1
-    },
-    "V": {
-        "cantidad": 2,
-        "valor": 4
-    },
-    "W": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "X": {
-        "cantidad": 1,
-        "valor": 8
-    },
-    "Y": {
-        "cantidad": 1,
-        "valor": 4
-    },
-    "Z": {
-        "cantidad": 1,
-        "valor": 10
+    "dificultad": {
+        "DIFICULTAD": 5
     }
 }

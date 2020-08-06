@@ -1,13 +1,13 @@
 import PySimpleGUI as sg
 import tablero as table
-
+import top10
 import random
 import jugador
 import string
 import pattern.es as pt
 import configuracion
 import json
-
+from os import remove
 
 
 
@@ -174,7 +174,7 @@ def iniciar():
 	def guardo_mano_propia(mano_propia,info_guardada):
 		info_guardada['mano propia'] = mano_propia
 	"""
-	def guardo_json(diccionario_top10):
+	def guardo_top10(diccionario_top10):
 		with open('top10.json', 'w') as f:
 			json.dump(diccionario_top10, f, indent=4)
 
@@ -187,12 +187,12 @@ def iniciar():
 			top10_valores.append(nuevo_puntaje)
 			top10_valores = sorted(top10_valores,reverse=True)
 			
-			print(top10_valores)
+			
 
 			for x in top10:
 				top10[x] = top10_valores[int(x)-1]
 
-			guardo_json(top10)
+			guardo_top10(top10)
 
 
 	def mostrar_top10():
@@ -226,18 +226,9 @@ def iniciar():
 		tablero.diccionario = coorde_tabla
 
 
-	def actualizar_top10():
-		top10 = {}
+	
 
-		try:
-			with open('configuration.json', 'w') as f:
-				json.dump(contenido, f, indent=4)
-
-		except:
-			print("NO EXISTE")
-
-	def mostrar_top10():
-		pass
+	
 
 	def actualizar_puntos(jugador):
 		"""Actualiza el puntaje en la Listbox"""
@@ -341,13 +332,22 @@ def iniciar():
 				
 				window["_CAMBIARFICHAS_"].Update(disabled = True)
 				
-				if event is "_TERMINAR_":
-					programa = False
+				if event == "-TOP10-":
+					top10.iniciar()
+					
+					
+					
+
+				if event == "_TERMINAR_":
+					
 					actualizo_top10(jugador1.puntaje)
+					mostrar_top10()
+
 					window.close()
+					programa = False
 					break
 
-				if event is "_CAMBIARFICHAS_":
+				if event == "_CAMBIARFICHAS_":
 					mano.cambiar_mano(jugador1)
 					mano.actualizar(window,jugador1)
 					event,values=window.read()
@@ -380,11 +380,12 @@ def iniciar():
 					
 				event, values = window.read()
 
-			if event is "_POSPONER_":
+			if event == "_POSPONER_":
 				info_guardada = {}
 				guardo_info_de_jugador(maquina,info_guardada)
 				guardo_info_de_jugador(jugador1,info_guardada)
 				guardo_info_de_tablero(tablero,info_guardada)
+
 				#guardo_mano_propia(mano_propia,info_guardada)
 				#guardo_mano_rival(mano_rival,info_guardada)
 				
@@ -393,11 +394,13 @@ def iniciar():
 				with open('juegoguardado.json', 'w') as f:
 					json.dump(info_guardada, f, indent=4)
 				
-			
+				programa = False
+				window.close()
+				break
 
 
 
-			if event is "_PASARTURNO_":
+			if event == "_PASARTURNO_":
 				jugador1.turno = False
 				maquina.turno = True
 				if palabra_existe(coordenadas_palabra):
@@ -491,7 +494,7 @@ def iniciar():
 	layout+=tablero.matriz
 	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJERIVAL-", size=(25,1))]]
 	layout+=mano_rival.fichas
-	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_",disabled= True),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_",disabled = True),sg.Button("POSPONER", key = "_POSPONER_",disabled = True),sg.Button("TERMINAR",key="_TERMINAR_")]]
+	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_",disabled= True),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_",disabled = True),sg.Button("TOP10",key ="-TOP10-"),sg.Button("POSPONER", key = "_POSPONER_",disabled = True),sg.Button("TERMINAR",key="_TERMINAR_")]]
 	
 	window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
 
@@ -529,8 +532,9 @@ def iniciar():
 			respuesta = sg.popup_yes_no(title="CONTINUAR?")
 			if respuesta == "Yes":
 				cargar_datos(contenido)
+				sg.Popup("Pulse COMENZAR para continuar el juego.")
 			else:
-				pass
+				remove('juegoguardado.json')
 
 		except:
 			sg.Popup("Pulse COMENZAR para iniciar el juego.")
@@ -538,8 +542,11 @@ def iniciar():
 
 		event,values = window.read()
 		tablero.actualizar(window)
-		
-		if event is "_TERMINAR_":
+		print(event)
+
+
+
+		if event == "_TERMINAR_":
 			programa = False
 			break
 

@@ -10,9 +10,11 @@ def iniciar():
 	with open('configuration.json', 'r') as archivo:
 		contenido = json.load(archivo)
 
-	dificultad = contenido['DIFICULTAD']['DIFICULTAD']
+		
+	
+	dificultad = contenido['dificultad']['DIFICULTAD']
 	bolsa_letras = contenido['bolsa_letras']
-	print("SE ENCUENTRA GUARDADA LA DIFICULTAD :", dificultad)
+	
 	sg.theme('Light Brown 9')
 	layout = [[sg.Text("")],
 			  [sg.Text("")],
@@ -69,7 +71,7 @@ def iniciar():
 			
 			contenido = {}
 			contenido['bolsa_letras'] = bolsa_letras
-			contenido['DIFICULTAD'] = dificultad
+			contenido['dificultad'] = dificultad
 			
 
 
@@ -78,12 +80,7 @@ def iniciar():
 
 			with open('configuration.json', 'w') as f:
 				json.dump(contenido, f, indent=4)
-				#json.dump(dificultad,f,indent=4)
-				#f.write(str(values['DIFICULTAD']))
-			#print("paso por acá")
-			
-			#with open('configuration.py', 'r') as arc:
-			#	bolsa_letras = dict(arc.read())
+			sg.Popup("Los cambios fueron guardados.")
 			
 		if event is "_EXIT_":
 			program = False

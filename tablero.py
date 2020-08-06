@@ -85,11 +85,10 @@ class Tablero:
 
 	def actualizar(self,window):
 		for x in self.diccionario:
-			print(x)
-			print(self.diccionario[x])
+			
 			if self.diccionario[x] == "":
 				
-				window[x].Update(text = self.diccionario[x]) #,image_filename= None)
+				window[x].Update(text = self.diccionario[x],image_filename= "./IconosFichas/Blanco.png",image_subsample =5,image_size=(43,45))
 			else:
 				ruta = "./IconosFichas/"+self.diccionario[x]+".png"
-				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))
+				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 5,image_size = (43,45))
