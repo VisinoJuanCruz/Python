@@ -6,7 +6,7 @@ import jugador
 import string
 import pattern.es as pt
 import configuracion
-
+import json
 
 
 
@@ -26,6 +26,9 @@ def iniciar():
 	
 	bolsa_fichas = mano.bolsa_letras
 	
+
+
+
 	def busca_palabra(diccionario_maquina):
 		#diccionario_maquina = maquina.fichas
 		palabras_validas = []
@@ -73,7 +76,6 @@ def iniciar():
 			se_puede = True
 
 			casillero = random.choice(list(tablero.diccionario.keys()))	
-			print("voy a poner :",palabra_a_formar," en el casillero: ",casillero)
 
 			for x in range(len(palabra_a_formar)):
 				try:
@@ -134,13 +136,19 @@ def iniciar():
 
 
 	def guardo_info_de_tablero(tablero,info_guardada):
-		diccionario_tablero = {'matriz': tablero.matriz,
-								'diccionario':tablero.diccionario,
-								'alto':tablero.alto,
-								'ancho':tablero.ancho
+		
+		tabla_diccionario = {}
+		for x in tablero.diccionario:
+			tabla_diccionario[str(x)] = tablero.diccionario[x]
 
-		}
-		info_guardada["TABLERO"] = diccionario_tablero
+
+		diccionario_tablero = {'coordenadas':tabla_diccionario,
+								'alto':tablero.alto,
+								'ancho':tablero.ancho}
+
+		
+		name_tabla= "tablero"
+		info_guardada[name_tabla] = diccionario_tablero
 	
 	def guardo_info_de_jugador(jugador,info_guardada):
 		diccionario_jugador = {'nombre':"",
@@ -159,19 +167,83 @@ def iniciar():
 
 		info_guardada[jugador.nombre] = diccionario_jugador
 
-
+	"""
 	def guardo_mano_rival(mano_rival,info_guardada):
 		info_guardada['mano rival'] = mano_rival
 
 	def guardo_mano_propia(mano_propia,info_guardada):
 		info_guardada['mano propia'] = mano_propia
+	"""
+	def guardo_json(diccionario_top10):
+		with open('top10.json', 'w') as f:
+			json.dump(diccionario_top10, f, indent=4)
+
+
+	def actualizo_top10(nuevo_puntaje):
+		with open('top10.json', 'r') as archivo:
+			top10 = json.load(archivo)
+			
+			top10_valores = list(top10.values())
+			top10_valores.append(nuevo_puntaje)
+			top10_valores = sorted(top10_valores,reverse=True)
+			
+			print(top10_valores)
+
+			for x in top10:
+				top10[x] = top10_valores[int(x)-1]
+
+			guardo_json(top10)
+
+
+	def mostrar_top10():
+		with open('top10.json', 'r') as archivo:
+			top10 = json.load(archivo)
+		print("TOP 10 PLAYERS")
+		for x in top10:
+			print("Top",x," es de ", top10[x], " puntos.")
+
+	def cargar_datos(contenido):
+		jugador1.nombre = contenido['jugador1']['nombre']
+		jugador1.fichas =	contenido['jugador1']['fichas']
+		jugador1.cant_fichas =contenido['jugador1']['cant_fichas']
+		jugador1.cant_puntos =contenido['jugador1']['cant_puntos']
+		jugador1.turno =contenido['jugador1']['turno']
+		jugador1.puntaje = contenido['jugador1']['puntaje']
+
+		maquina.nombre = contenido['maquina']['nombre']
+		maquina.fichas =	contenido['maquina']['fichas']
+		maquina.cant_fichas =contenido['maquina']['cant_fichas']
+		maquina.cant_puntos =contenido['maquina']['cant_puntos']
+		maquina.turno =contenido['maquina']['turno']
+		maquina.puntaje = contenido['maquina']['puntaje']
+
+		coorde_tabla = {}
+		for x in contenido['tablero']['coordenadas']:
+			coorde = tuple(int(num) for num in x.replace('(', '').replace(')', '').replace('...', '').split(', '))
+
+			coorde_tabla[coorde] = contenido['tablero']['coordenadas'][x]
+
+		tablero.diccionario = coorde_tabla
+
+
+	def actualizar_top10():
+		top10 = {}
+
+		try:
+			with open('configuration.json', 'w') as f:
+				json.dump(contenido, f, indent=4)
+
+		except:
+			print("NO EXISTE")
+
+	def mostrar_top10():
+		pass
 
 	def actualizar_puntos(jugador):
 		"""Actualiza el puntaje en la Listbox"""
 
 		for x in list(coordenadas_tablero.keys()):
 			letra = coordenadas_tablero[x]
-			print(x)
 			
 			if window[x].ButtonColor ==('yellow','yellow'):
 				jugador.puntaje += (int(bolsa_fichas[letra.upper()]['valor'])) * 2
@@ -269,8 +341,9 @@ def iniciar():
 				
 				window["_CAMBIARFICHAS_"].Update(disabled = True)
 				
-				if event is "_VOLVER_":
-					program = False
+				if event is "_TERMINAR_":
+					programa = False
+					window.close()
 					break
 
 				if event is "_CAMBIARFICHAS_":
@@ -311,11 +384,16 @@ def iniciar():
 				guardo_info_de_jugador(maquina,info_guardada)
 				guardo_info_de_jugador(jugador1,info_guardada)
 				guardo_info_de_tablero(tablero,info_guardada)
-				guardo_mano_propia(mano_propia,info_guardada)
-				guardo_mano_rival(mano_rival,info_guardada)
-				print("GUARDE TODO ESTO:")
-				print("__"*50)
-				print(info_guardada)
+				#guardo_mano_propia(mano_propia,info_guardada)
+				#guardo_mano_rival(mano_rival,info_guardada)
+				
+				
+				
+				with open('juegoguardado.json', 'w') as f:
+					json.dump(info_guardada, f, indent=4)
+				
+			
+
 
 
 			if event is "_PASARTURNO_":
@@ -334,7 +412,6 @@ def iniciar():
 					sg.Popup("ERROR","La palabra ingresada no existe")
 					recupero_datos()
 					mano.actualizar(window,jugador1)
-					print("coordendadas_palabra: ", coordenadas_palabra)
 					vacio_diccionario(coordenadas_palabra)
 					vacio_diccionario(coordenadas_tablero)
 					mano_propia.deshabilitar(window)
@@ -363,8 +440,9 @@ def iniciar():
 	def preparo_mano():
 		"""Asigna letra en el tablero, deshabilita tablero, habilita mano."""
 		coordenadas_posibles.remove(event)
-
+		
 		tablero.diccionario[event] = (list(coordenadas_palabra.values())[-1])
+		
 		tablero.actualizar(window)
 		tablero.estado_botones(window,True)
 		mano_propia.habilitar(window,coordenadas_palabra)
@@ -412,7 +490,7 @@ def iniciar():
 	layout+=tablero.matriz
 	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJERIVAL-", size=(25,1))]]
 	layout+=mano_rival.fichas
-	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_",disabled= True),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_",disabled = True),sg.Button("POSPONER", key = "_POSPONER_",disabled = True),sg.Button("VOLVER AL MENU",key="_VOLVER_")]]
+	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_",disabled= True),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_",disabled = True),sg.Button("POSPONER", key = "_POSPONER_",disabled = True),sg.Button("TERMINAR",key="_TERMINAR_")]]
 	
 	window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
 
@@ -436,18 +514,27 @@ def iniciar():
 
 	tablero.asignar_especiales()
 	movimiento = 0
-	program = True
+	programa = True
 
 	#
 	
 
-	while program:
+	while programa:
 		
+		try:
+			with open('juegoguardado.json', 'r') as juegoguardado:
+				contenido = json.load(juegoguardado)
+				cargar_datos(contenido)
+
+		except:
+			print("NO EXISTE")
+
+
 		event,values = window.read()
 		tablero.actualizar(window)
 		
-		if event is "_VOLVER_":
-			program = False
+		if event is "_TERMINAR_":
+			programa = False
 			break
 
 		if event == "_COMENZAR_":
@@ -463,7 +550,7 @@ def iniciar():
 			sentido = ''
 			
 
-		while event != "_VOLVER_" and event != "_POSPONER_":
+		while event != "_TERMINAR_" and event != "_POSPONER_":
 			if maquina.turno:
 				turno_maquina(maquina)
 				mano.habilitar(window,jugador1)

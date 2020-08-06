@@ -51,8 +51,6 @@ class Tablero:
 			self.estado_botones(window,False)
 		elif self.sentido(lista_keys) == "uno":
 			coorde = lista_keys[-1]
-			print("La coorde: ",coorde, "tiene x = ",coorde[0], "tambien Y = ", coorde[1])
-			print(tuple((int(coorde[0]+1),int(coorde[1]))))
 			if (int(coorde[0]+1)<self.alto) and self.diccionario[tuple((int(coorde[0]+1),int(coorde[1])))]  == "":
 				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
 			if int(coorde[1]+1)<self.ancho and self.diccionario[tuple((int(coorde[0]),int(coorde[1]+1)))]  == "":
@@ -87,10 +85,11 @@ class Tablero:
 
 	def actualizar(self,window):
 		for x in self.diccionario:
-			#print(self.matriz[[int(x[0])][int(x[1])]].ButtonColor)
+			print(x)
+			print(self.diccionario[x])
 			if self.diccionario[x] == "":
 				
-				window[x].Update(text = self.diccionario[x],image_filename= None)
+				window[x].Update(text = self.diccionario[x]) #,image_filename= None)
 			else:
 				ruta = "./IconosFichas/"+self.diccionario[x]+".png"
 				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))

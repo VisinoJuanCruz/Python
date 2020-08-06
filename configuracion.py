@@ -7,12 +7,12 @@ import json
 #sg.theme_previewer()
 def iniciar():
 	
-	with open('configuration.json', 'r') as bolsa:
-		bolsa_letras = json.load(bolsa)
+	with open('configuration.json', 'r') as archivo:
+		contenido = json.load(archivo)
 
-	bolsa.close()	
-	
-
+	dificultad = contenido['DIFICULTAD']['DIFICULTAD']
+	bolsa_letras = contenido['bolsa_letras']
+	print("SE ENCUENTRA GUARDADA LA DIFICULTAD :", dificultad)
 	sg.theme('Light Brown 9')
 	layout = [[sg.Text("")],
 			  [sg.Text("")],
@@ -31,7 +31,7 @@ def iniciar():
 			  [sg.Text("LL: "),sg.Input(bolsa_letras['LL']['valor'],key="VALOR-LL",size=(5,5)),sg.Text("     "),sg.Text("M:"),sg.Input(bolsa_letras['M']['valor'],key="VALOR-M",size=(5,5)),sg.Text("     "),sg.Text("N:  "),sg.Input(bolsa_letras['N']['valor'],key="VALOR-N",size=(5,5)),sg.Text("     "),sg.Text("Ñ:  "),sg.Input(bolsa_letras['Ñ']['valor'],key="VALOR-Ñ",size=(5,5)),sg.Text("     "),sg.Text("O: "),sg.Input(bolsa_letras['O']['valor'],key="VALOR-O",size=(5,5)),sg.Text("     "),sg.Text("P:   "),sg.Input(bolsa_letras['P']['valor'],key="VALOR-P",size=(5,5))],#sg.Text("   (En minutos)")],
 			  [sg.Text("Q:  "),sg.Input(bolsa_letras['Q']['valor'],key="VALOR-Q",size=(5,5)),sg.Text("     "),sg.Text("R: "),sg.Input(bolsa_letras['R']['valor'],key="VALOR-R",size=(5,5)),sg.Text("    "),sg.Text("RR:"),sg.Input(bolsa_letras['RR']['valor'],key="VALOR-RR",size=(5,5)),sg.Text("     "),sg.Text("S:  "),sg.Input(bolsa_letras['S']['valor'],key="VALOR-S",size=(5,5)),sg.Text("     "),sg.Text("T: "),sg.Input(bolsa_letras['T']['valor'],key="VALOR-T",size=(5,5)),sg.Text("     "),sg.Text("U:    "),sg.Input(bolsa_letras['U']['valor'],key="VALOR-U",size=(5,5))],
 			  [sg.Text(" V: "),sg.Input(bolsa_letras['V']['valor'],key="VALOR-V",size=(5,5)),sg.Text("     "),sg.Text("W:"),sg.Input(bolsa_letras['W']['valor'],key="VALOR-W",size=(5,5)),sg.Text("     "),sg.Text("X:  "),sg.Input(bolsa_letras['X']['valor'],key="VALOR-X",size=(5,5)),sg.Text("     "),sg.Text("Y:  "),sg.Input(bolsa_letras['Y']['valor'],key="VALOR-Y",size=(5,5)),sg.Text("     "),sg.Text("Z:  "),sg.Input(bolsa_letras['Z']['valor'],key="VALOR-Z",size=(5,5)),sg.Text("     ")],
-			  [sg.Text("Selecione dificultad( 1 - 3 ) :"),sg.Input(key="DIFICULTAD",size = (3,3))],
+			  [sg.Text("Selecione dificultad( 1 - 3 ) :"),sg.Input(dificultad,key="DIFICULTAD",size = (3,3))],
 			  [sg.Text(" "*70),sg.Button("Guardar",key="_GUARDAR_"),sg.Button("SALIR",key = "_EXIT_")]]
 
 
@@ -67,16 +67,20 @@ def iniciar():
 
 			
 			
-
-
-			print("BOLSA LETRAS: ",bolsa_letras)
-
-			print("DICCIONARIO LETRAS : ", type(bolsa_letras))
+			contenido = {}
+			contenido['bolsa_letras'] = bolsa_letras
+			contenido['DIFICULTAD'] = dificultad
 			
+
+
+			
+			
+
 			with open('configuration.json', 'w') as f:
-				json.dump(bolsa_letras, f, indent=4)
+				json.dump(contenido, f, indent=4)
+				#json.dump(dificultad,f,indent=4)
 				#f.write(str(values['DIFICULTAD']))
-			print("paso por acá")
+			#print("paso por acá")
 			
 			#with open('configuration.py', 'r') as arc:
 			#	bolsa_letras = dict(arc.read())
