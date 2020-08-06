@@ -5,11 +5,10 @@ import PySimpleGUI as sg
 #Clase Tablero
 class Tablero:
 	#Atributos
-	def __init__(self,alto,ancho):
-		self.matriz = [[sg.Button(str(""),size=(3, 3),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
-			font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
+	def __init__(self,matriz,diccionario,alto,ancho):
+		self.matriz = matriz
 		
-		self.diccionario = {}
+		self.diccionario = diccionario
 
 		self.alto = alto
 		self.ancho = ancho
@@ -47,20 +46,22 @@ class Tablero:
 
 		lista_keys = list(estructura.keys())
 		
+		
 		if self.sentido(lista_keys) == "cero":
 			self.estado_botones(window,False)
 		elif self.sentido(lista_keys) == "uno":
-			#print("Tengo esta coordenada : ",lista_keys[-1])
-			if int(lista_keys[-1][0]+1)<self.alto:
+			coorde = lista_keys[-1]
+			print("La coorde: ",coorde, "tiene x = ",coorde[0], "tambien Y = ", coorde[1])
+			print(tuple((int(coorde[0]+1),int(coorde[1]))))
+			if (int(coorde[0]+1)<self.alto) and self.diccionario[tuple((int(coorde[0]+1),int(coorde[1])))]  == "":
 				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
-			if int(lista_keys[-1][1]+1)<self.ancho:
+			if int(coorde[1]+1)<self.ancho and self.diccionario[tuple((int(coorde[0]),int(coorde[1]+1)))]  == "":
 				window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 		elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
-			#print("Tengo esta coordenada : ",lista_keys[-1])
-			#print("habilito la coorde vertical : ",(lista_keys[-1][0]+1,lista_keys[-1][1] ))
+			
 			window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
 		elif (self.sentido(lista_keys) == "horizontal") and (lista_keys[-1][1]+1 < self.ancho):
-			#print("Tengo esta coordenada : ",lista_keys[-1][0])
+			
 			window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 			
 	
@@ -72,11 +73,24 @@ class Tablero:
 			for y in range(self.ancho):
 				if ((x ==y) or ((x+y)== self.ancho-1)) :
 					self.matriz[x][y].ButtonColor=('yellow','yellow')
-				if ((x == 0) or (x==7) or (x==14)) and ((y == 0) or (y==7) or (y==14)):
+				if ((x == 0) or (x==(self.alto-1)/2) or (x==self.alto-1)) and ((y == 0) or (y==(self.ancho-1)/2) or (y==self.ancho-1)):
 					self.matriz[x][y].ButtonColor=('black','black')
-				if ((x ==7) and (y==7)):
+					#self.matriz[x][y].ImageFilename = "./IconosFichas/descuento.png"
+					#self.matriz[x][y].ImageSubSample = 4
+					#self.matriz[x][y].ImageSize = (43,45)
+					#self.matriz[x][y].border_width = 0
+				if ((x ==(self.alto-1)/2) and (y==(self.ancho-1)/2)):
 					self.matriz[x][y].ButtonColor=('red','red')
+					#self.matriz[x][y].ImageFilename = "./IconosFichas/descuento.png"
+					#self.matriz[x][y].ImageSubSample = 4
+					self.matriz[x][y].ImageSize = (43,45)
 
 	def actualizar(self,window):
 		for x in self.diccionario:
-			window[x].Update(text = self.diccionario[x])
+			#print(self.matriz[[int(x[0])][int(x[1])]].ButtonColor)
+			if self.diccionario[x] == "":
+				
+				window[x].Update(text = self.diccionario[x],image_filename= None)
+			else:
+				ruta = "./IconosFichas/"+self.diccionario[x]+".png"
+				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))

@@ -61,7 +61,10 @@ def cambiar_mano(jugador):
 	print("SE CAMBIO LA MANO DEL JUGADOR : ", jugador)
 def actualizar(window,jugador):
 	for x in jugador.fichas.keys():
-		window[int(x)].Update(text = jugador.fichas[x])
+		if jugador.fichas[x] != "":
+			letra = jugador.fichas[x]
+			ruta = "./IconosFichas/"+letra+".png"
+			window[int(x)].Update(text = jugador.fichas[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))
 
 def habilitar(window,jugador1):
 	for x in jugador1.fichas.keys():
