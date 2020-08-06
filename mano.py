@@ -3,11 +3,11 @@ import random
 import json
 
 with open('configuration.json', 'r') as bolsa:
-	bolsa_letras = json.load(bolsa)
+	contenido = json.load(bolsa)
 
-	bolsa.close()	
+		
 
-
+bolsa_letras = contenido['bolsa_letras']
 #Creo la bolsa con las letras disponibles
 letras_disponibles = []
 for letra in bolsa_letras:
