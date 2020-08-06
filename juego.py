@@ -343,6 +343,7 @@ def iniciar():
 				
 				if event is "_TERMINAR_":
 					programa = False
+					actualizo_top10(jugador1.puntaje)
 					window.close()
 					break
 
@@ -524,10 +525,15 @@ def iniciar():
 		try:
 			with open('juegoguardado.json', 'r') as juegoguardado:
 				contenido = json.load(juegoguardado)
+				
+			respuesta = sg.popup_yes_no(title="CONTINUAR?")
+			if respuesta == "Yes":
 				cargar_datos(contenido)
+			else:
+				pass
 
 		except:
-			print("NO EXISTE")
+			sg.Popup("Pulse COMENZAR para iniciar el juego.")
 
 
 		event,values = window.read()
@@ -564,19 +570,4 @@ def iniciar():
 
 		
 	window.close()
-
-		
-		
-		
-		
-		
-		
-		
-		
-
-
-
-		
-		
-
 
