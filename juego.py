@@ -36,6 +36,7 @@ def iniciar():
 	
 	bolsa_fichas = mano.bolsa_letras
 	def funcion_manejadora(signum,frame):
+		"""Genera una interrupcion cuando se llega al tiempo cumplido"""
 		window.read()
 		sg.Popup("Tiempo finalizado")
 		program = False
@@ -43,6 +44,7 @@ def iniciar():
 		signal.alarm(0)
 	
 	def comienza_timer():
+		"""Traigo del archivo configuration el tiempo guardado"""
 		with open('configuration.json', 'r') as archivo:
 			contenido = json.load(archivo)
 			tiempo = contenido['tiempo']
@@ -57,7 +59,7 @@ def iniciar():
 
 
 	def busca_palabra(diccionario_maquina):
-		#diccionario_maquina = maquina.fichas
+		"""Busca una palabra que pueda formar con sus letras. Como parametro necesita el diccionario de su mano"""
 		palabras_validas = []
 		
 		if dificultad == 1:
@@ -107,6 +109,7 @@ def iniciar():
 		return palabra_a_formar
 
 	def busca_lugar_en_tablero(palabra_a_formar):
+		"""Encuentra el lugar en el tablero para que se escriba la palabra pasada como parametro"""
 		
 		
 		se_puede = False
@@ -149,6 +152,7 @@ def iniciar():
 		return retorno
 
 	def escribo_palabra(tupla,palabra_a_formar):
+		"""La maquina escribe la palabra, necesita como parametro una tupla con la coordenada y la direccion, y la palabra a escribir"""
 		if tupla[1] == "vertical":
 			for x in range(len(palabra_a_formar)):
 				tablero.diccionario[tupla[0][0]+x,tupla[0][1]] = palabra_a_formar[x].upper()
@@ -163,6 +167,7 @@ def iniciar():
 		#
 
 	def turno_maquina(maquina):
+		"""Son las acciones que realiza la maquina para cumplir con su turno"""
 		palabra = busca_palabra(maquina.fichas)
 		mano.repartir_fichas(maquina,mano_rival)
 		tupla = busca_lugar_en_tablero(palabra)
@@ -178,6 +183,7 @@ def iniciar():
 
 
 	def guardo_info_de_tablero(tablero,info_guardada):
+		"""Guardo la informacion del tablero en el diccionario para luego pasarlo al archivo juegoguarado.json"""
 		
 		tabla_diccionario = {}
 		for x in tablero.diccionario:
@@ -193,6 +199,7 @@ def iniciar():
 		info_guardada[name_tabla] = diccionario_tablero
 	
 	def guardo_info_de_jugador(jugador,info_guardada):
+		"""Guardo los datos del momento en un diccionario para luego pasarlo al archivo juegoguardado.json"""
 		diccionario_jugador = {'nombre':"",
 								'fichas':"",
 								'cant_fichas':"",
@@ -212,14 +219,17 @@ def iniciar():
 		info_guardada[jugador.nombre] = diccionario_jugador
 
 	def guardo_dificultad(dificultad,info_guardada):
+		"""guardo la dificultad en un diccionario que luego va a ir al archivo juegoguardado.json"""
 		info_guardada['dificultad'] = dificultad
 	
 	def guardo_top10(diccionario_top10):
+		"""Guardo el top10 en un archivo llamado top10.json"""
 		with open('top10.json', 'w') as f:
 			json.dump(diccionario_top10, f, indent=4)
 
 
 	def actualizo_top10(nuevo_puntaje):
+		"""Actualizo el top10."""
 		with open('top10.json', 'r') as archivo:
 			top10 = json.load(archivo)
 			
@@ -236,11 +246,13 @@ def iniciar():
 
 
 	def mostrar_top10():
+		"""Leo lo que tiene el archivo de los top10"""
 		with open('top10.json', 'r') as archivo:
 			top10 = json.load(archivo)
 		
 
 	def cargar_datos(contenido):
+		"""Carga los datos de los jugadores y el tablero de la ultima partida"""
 		jugador1.nombre = contenido['jugador1']['nombre']
 		jugador1.fichas =	contenido['jugador1']['fichas']
 		jugador1.cant_fichas =contenido['jugador1']['cant_fichas']
@@ -273,6 +285,7 @@ def iniciar():
 		
 	
 	def cargar_dificultad():
+		"""Carga la dificultad guardada en la configuracion"""
 		with open('configuration.json','r') as archivo:
 			data_config = json.load(archivo)
 			return data_config['dificultad']
@@ -280,21 +293,27 @@ def iniciar():
 
 	def actualizar_puntos(jugador):
 		"""Actualiza el puntaje en la Listbox"""
-
+		negro = False
+		puntaje_palabra = 0
 		for x in list(coordenadas_tablero.keys()):
 			letra = coordenadas_tablero[x]
 			
 			if window[x].ButtonColor ==('yellow','yellow'):
-				jugador.puntaje += (int(bolsa_fichas[letra.upper()]['valor'])) * 2
+				puntaje_palabra += (int(bolsa_fichas[letra.upper()]['valor'])) * 2
 				
 			else:
 				if window[x].ButtonColor == ('black','black'):
-					jugador.puntaje += int(bolsa_fichas[letra.upper()]['valor']) * 0.5
+					negro = True
 					
 				else:
-					jugador.puntaje += int(bolsa_fichas[letra.upper()]['valor'])
+					puntaje_palabra += int(bolsa_fichas[letra.upper()]['valor'])
+		if negro:
+			puntaje_palabra * 0.5
+
+		jugador.puntaje += puntaje_palabra
 			
 	def actualizar_puntajes():
+		"""Actualiza los puntajes en el layout"""
 		window["-PUNTAJERIVAL-"].Update(int(maquina.puntaje))
 		window["-PUNTAJEPROPIO-"].Update(int(jugador1.puntaje))
 	
@@ -317,7 +336,6 @@ def iniciar():
 
 		palabras_validas = []
 
-		print("LA DIFICULTAD ES: ", dificultad)
 
 		if dificultad == 1:
 			for x in pt.spelling:

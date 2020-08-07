@@ -7,14 +7,13 @@ class Tablero:
 	#Atributos
 	def __init__(self,matriz,diccionario,alto,ancho):
 		self.matriz = matriz
-		
 		self.diccionario = diccionario
-
 		self.alto = alto
 		self.ancho = ancho
 		
 		
 	def crear_diccionario(self):
+		"""Crea un diccionario que va a ser atributo del tablero"""
 		for x in range(self.ancho):
 			for y in range(self.alto):
 				self.diccionario[x,y] = ""
@@ -41,6 +40,7 @@ class Tablero:
 			return "horizontal"
 	
 	def esVacio(self):
+		"""Devuelve True si todavia no se colocó ninguna ficha en el tablero"""
 		vacio = True
 		for x in self.diccionario:
 			if self.diccionario[x] != "":

@@ -86,12 +86,12 @@ def iniciar():
 						print("No hay tiempo")
 				if x == "DIAMETRO":
 					try:
-						if (int(values['DIAMETRO'])>15 and int(values['DIAMETRO'])<20):
+						if (int(values['DIAMETRO']))== 15 or (int(values['DIAMETRO'])) == 17 or (int(values['DIAMETRO'])) == 19 :
 							diametro = int(values['DIAMETRO'])
 						else:
-							errores['diametro'] = "El diametro no puede ser menor que 15 ni mayor a 20"
+							errores['diametro'] = "El diametro debe ser 15,17 o 19"
 					except:
-						errores['diametro'] = "El diametro no puede ser menor que 15 ni mayor a 20"
+						errores['diametro'] = "El diametro debe ser 15,17 o 19"
 
 
 			

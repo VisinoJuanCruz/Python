@@ -46,6 +46,7 @@ def repartir_fichas(jugador,mano):
 					jugador.sumar_ficha()
 
 def cambiar_mano(jugador):
+	"""Cambio las fichas de la mano de un jugador pasado como parametro"""
 	while jugador.cant_fichas != 0:
 		for x in jugador.fichas:
 			letras_disponibles.append(jugador.fichas[x])
@@ -61,6 +62,7 @@ def cambiar_mano(jugador):
 			
 			jugador.sumar_ficha()
 def actualizar(window,jugador):
+	"""Actualiza el layout"""
 	for x in jugador.fichas.keys():
 		if jugador.fichas[x] != "":
 			letra = jugador.fichas[x]
@@ -68,6 +70,7 @@ def actualizar(window,jugador):
 			window[int(x)].Update(text = jugador.fichas[x],image_filename=ruta,image_subsample = 4,image_size = (43,45))
 
 def habilitar(window,jugador1):
+	"""habilita la mano"""
 	for x in jugador1.fichas.keys():
 		window[int(x)].Update(disabled = False)
 
