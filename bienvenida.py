@@ -30,6 +30,8 @@ while program:
 	if event is "_COMENZAR_":
 		
 		game.iniciar()
+		window.close()
+		program = False
 	if event is "_CONFIG_":
 		
 		config.iniciar()

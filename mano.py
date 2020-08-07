@@ -18,21 +18,32 @@ for letra in bolsa_letras:
 
 def selecciono_random(letras_disponibles):
 	"""Retorna una letra sacada al azar de 'letras_disponibles'"""
+	
 	letra = random.choice(letras_disponibles)
-	letras_disponibles.remove(letra)
+	letras_disponibles.remove(letra)	
 	return letra
+	
+		
+
+	
+	
 
 
 
 def repartir_fichas(jugador,mano):
 	"""Reparte fichas al jugador y la mano pasada como parametro"""
-
-	while jugador.cant_fichas < len(jugador.fichas.keys()):
+	salir = False
+	while (jugador.cant_fichas < len(jugador.fichas.keys())) and not salir:
 		for x in jugador.fichas:
 			if jugador.fichas[x] == "":
-				letra = selecciono_random(letras_disponibles).upper()
-				jugador.fichas[x] = letra
-				jugador.sumar_ficha()
+				if len(letras_disponibles) == 0:
+					sg.Popup("No hay mas letras. Fin del juego.")
+					salir = True
+					break
+				else:
+					letra = selecciono_random(letras_disponibles).upper()
+					jugador.fichas[x] = letra
+					jugador.sumar_ficha()
 
 def cambiar_mano(jugador):
 	while jugador.cant_fichas != 0:

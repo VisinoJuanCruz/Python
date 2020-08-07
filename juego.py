@@ -21,25 +21,55 @@ def iniciar():
 	alto=15
 	ancho=15
 	import mano
+	import signal
+	import time
 
 
 	
 	bolsa_fichas = mano.bolsa_letras
+	def funcion_manejadora(signum,frame):
+		window.read()
+		sg.Popup("Tiempo finalizado")
+		program = False
+		window.close()
+		signal.alarm(0)
 	
+	def comienza_timer():
+		with open('configuration.json', 'r') as archivo:
+			contenido = json.load(archivo)
+			tiempo = contenido['tiempo']
+			print(tiempo)
+
+			temporizador = 60* int(tiempo)
+			signal.signal(signal.SIGALRM, funcion_manejadora)
+			signal.alarm(temporizador) #Setea el timer / 
+			sg.Popup("Minutos restantes: ",tiempo)
+
 
 
 
 	def busca_palabra(diccionario_maquina):
 		#diccionario_maquina = maquina.fichas
 		palabras_validas = []
-		for x in pt.spelling:
-			palabras_validas.append(x.lower())
-		for x in pt.verbs:
-			palabras_validas.append(x.lower())
-		for x in pt.lexicon:
-			palabras_validas.append(x.lower())
+		
+		if dificultad == 1:
+			for x in pt.spelling:
+				palabras_validas.append(x.lower())
+			for x in pt.verbs:
+				palabras_validas.append(x.lower())
+			for x in pt.lexicon:
+				palabras_validas.append(x.lower())
+		else:
+			if dificultad == 2:
+				for x in pt.spelling:
+					palabras_validas.append(x.lower())
+				for x in pt.verbs:
+					palabras_validas.append(x.lower())
+			else:
+				for x in pt.verbs:
+					palabras_validas.append(x.lower())
 
-
+		
 		dict_values = []
 		palabra_a_formar = []
 		for x in diccionario_maquina.values():
@@ -167,13 +197,9 @@ def iniciar():
 
 		info_guardada[jugador.nombre] = diccionario_jugador
 
-	"""
-	def guardo_mano_rival(mano_rival,info_guardada):
-		info_guardada['mano rival'] = mano_rival
-
-	def guardo_mano_propia(mano_propia,info_guardada):
-		info_guardada['mano propia'] = mano_propia
-	"""
+	def guardo_dificultad(dificultad,info_guardada):
+		info_guardada['dificultad'] = dificultad
+	
 	def guardo_top10(diccionario_top10):
 		with open('top10.json', 'w') as f:
 			json.dump(diccionario_top10, f, indent=4)
@@ -198,9 +224,7 @@ def iniciar():
 	def mostrar_top10():
 		with open('top10.json', 'r') as archivo:
 			top10 = json.load(archivo)
-		print("TOP 10 PLAYERS")
-		for x in top10:
-			print("Top",x," es de ", top10[x], " puntos.")
+		
 
 	def cargar_datos(contenido):
 		jugador1.nombre = contenido['jugador1']['nombre']
@@ -218,6 +242,8 @@ def iniciar():
 		maquina.puntaje = contenido['maquina']['puntaje']
 
 		coorde_tabla = {}
+
+		dificultad = contenido['dificultad']
 		for x in contenido['tablero']['coordenadas']:
 			coorde = tuple(int(num) for num in x.replace('(', '').replace(')', '').replace('...', '').split(', '))
 
@@ -225,9 +251,15 @@ def iniciar():
 
 		tablero.diccionario = coorde_tabla
 
+		dificultad = contenido['dificultad']
 
 	
-
+		
+	
+	def cargar_dificultad():
+		with open('configuration.json','r') as archivo:
+			data_config = json.load(archivo)
+			return data_config['dificultad']
 	
 
 	def actualizar_puntos(jugador):
@@ -247,8 +279,8 @@ def iniciar():
 					jugador.puntaje += int(bolsa_fichas[letra.upper()]['valor'])
 			
 	def actualizar_puntajes():
-		window["-PUNTAJERIVAL-"].Update(list(str(int(maquina.puntaje))))
-		window["-PUNTAJEPROPIO-"].Update(list(str(int(jugador1.puntaje))))
+		window["-PUNTAJERIVAL-"].Update(int(maquina.puntaje))
+		window["-PUNTAJEPROPIO-"].Update(int(jugador1.puntaje))
 	
 	def recupero_datos():
 		"""Si la palabra es erronea, se puede usar esta funcion para devolver el tablero y la mano a como estaba en el turno inicialmente. Se le pasa como parametro las coordenadas de tablero y de la mano utilizadas en este turno"""
@@ -262,27 +294,39 @@ def iniciar():
 
 	def palabra_existe(diccionario):
 		"""Verifica si la palabra pasada existe, se le pasa como parametro un diccionario de tipo {coordenada:letra}, donde la coordenada es la ficha seleccionada de su mano."""
-		nivel = 1
+		
 		palabra = ""
 		for x in diccionario.values():
 			palabra += x
 
-		if nivel == 1:
-			if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon) or (palabra.lower() in pt.spelling):
-				return True
+		palabras_validas = []
 
-			else:return False
+		print("LA DIFICULTAD ES: ", dificultad)
+
+		if dificultad == 1:
+			for x in pt.spelling:
+				palabras_validas.append(x.lower())
+			for x in pt.verbs:
+				palabras_validas.append(x.lower())
+			for x in pt.lexicon:
+				palabras_validas.append(x.lower())
 		else:
-			if nivel == 2:
-				if (palabra.lower() in pt.verbs) or (palabra.lower() in pt.lexicon):
-					return True
-				else:
-					return False
+			if dificultad == 2:
+				for x in pt.spelling:
+					palabras_validas.append(x.lower())
+				for x in pt.verbs:
+					palabras_validas.append(x.lower())
 			else:
-				if (palabra.lower() in pt.verbs):
-					return True
-				else:
-					return False
+				for x in pt.verbs:
+					palabras_validas.append(x.lower())
+
+		
+		if palabra.lower() in palabras_validas:
+			return True
+		else:
+			return False
+				
+
 	
 	def vacio_diccionario(diccionario):
 		"""Vacia el diccionario que se le pase por parametro"""
@@ -327,6 +371,7 @@ def iniciar():
 			
 
 			event , values = window.read()
+			actualizar_timer()
 			
 			while (event != "_PASARTURNO_") and (event != "_POSPONER_"):
 				
@@ -351,6 +396,7 @@ def iniciar():
 					mano.cambiar_mano(jugador1)
 					mano.actualizar(window,jugador1)
 					event,values=window.read()
+					actualizar_timer()
 				
 				
 
@@ -379,18 +425,14 @@ def iniciar():
 					mano_propia.habilitar(window,coordenadas_palabra)
 					
 				event, values = window.read()
+				actualizar_timer()
 
 			if event == "_POSPONER_":
 				info_guardada = {}
 				guardo_info_de_jugador(maquina,info_guardada)
 				guardo_info_de_jugador(jugador1,info_guardada)
 				guardo_info_de_tablero(tablero,info_guardada)
-
-				#guardo_mano_propia(mano_propia,info_guardada)
-				#guardo_mano_rival(mano_rival,info_guardada)
-				
-				
-				
+				guardo_dificultad(dificultad,info_guardada)
 				with open('juegoguardado.json', 'w') as f:
 					json.dump(info_guardada, f, indent=4)
 				
@@ -426,7 +468,10 @@ def iniciar():
 			window["_PASARTURNO_"].Update(disabled = True)
 			window["_CAMBIARFICHAS_"].Update(disabled = True)
 			
-
+	def actualizar_timer():
+		tiempo_transcurrido = int(round(time.time() * 100)) - tiempo_inicial
+		tiempotext = ('{:02d}:{:02d}'.format((tiempo_transcurrido // 100) // 60,(tiempo_transcurrido // 100) ))
+		window["-TIMER-"].Update(tiempotext)
 
 
 	def preparo_tablero():
@@ -484,15 +529,16 @@ def iniciar():
 	jugador1.crear_fichas(diccionario_jugador1)
 	maquina.crear_fichas(diccionario_maquina)
 	
-
-	
+	tiempo_inicial = 0
+	tiempo_transcurrido = int(round(time.time() * 100)) - tiempo_inicial
+	tiempotext = ('TIEMPO TRANSCURRIDO : {:02d}:{:02d}'.format((tiempo_transcurrido // 100) // 60,(tiempo_transcurrido // 100) ))
 	
 
 	#DEFINO EL LAYUOT
 	layout=mano_propia.fichas
-	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJEPROPIO-", size=(25,1))]]
+	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Text(jugador1.puntaje,key="-PUNTAJEPROPIO-", size=(25,1))]]
 	layout+=tablero.matriz
-	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Listbox(values=[],key="-PUNTAJERIVAL-", size=(25,1))]]
+	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Text(maquina.puntaje,key="-PUNTAJERIVAL-", size=(25,1)),sg.Text(' '*15),sg.Text("00:00",key="-TIMER-")]]
 	layout+=mano_rival.fichas
 	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_",disabled= True),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_",disabled = True),sg.Button("TOP10",key ="-TOP10-"),sg.Button("POSPONER", key = "_POSPONER_",disabled = True),sg.Button("TERMINAR",key="_TERMINAR_")]]
 	
@@ -520,11 +566,16 @@ def iniciar():
 	movimiento = 0
 	programa = True
 
-	#
+	tiempo_transcurrido = 0
+	tiempo_inicial = int(round(time.time()*100))
+	dificultad = 0
 	
 
 	while programa:
+
 		
+		dificultad = cargar_dificultad()
+
 		try:
 			with open('juegoguardado.json', 'r') as juegoguardado:
 				contenido = json.load(juegoguardado)
@@ -532,6 +583,7 @@ def iniciar():
 			respuesta = sg.popup_yes_no(title="CONTINUAR?")
 			if respuesta == "Yes":
 				cargar_datos(contenido)
+				print("La dificultad es : ",dificultad)
 				sg.Popup("Pulse COMENZAR para continuar el juego.")
 			else:
 				remove('juegoguardado.json')
@@ -539,12 +591,18 @@ def iniciar():
 		except:
 			sg.Popup("Pulse COMENZAR para iniciar el juego.")
 
-
+		
 		event,values = window.read()
+		actualizar_timer()
 		tablero.actualizar(window)
-		print(event)
-
-
+		tiempo_transcurrido = int(round(time.time() * 100)) - tiempo_inicial
+		tiempotext = ('{:02d}:{:02d}'.format((tiempo_transcurrido // 100) // 60,
+													(tiempo_transcurrido // 100) ))
+		window["-TIMER-"].Update(tiempotext)
+		
+		comienza_timer()
+		
+		
 
 		if event == "_TERMINAR_":
 			programa = False
@@ -562,18 +620,26 @@ def iniciar():
 			coordenadas_tablero = {}
 			sentido = ''
 			
+			
 
 		while event != "_TERMINAR_" and event != "_POSPONER_":
 			if maquina.turno:
 				turno_maquina(maquina)
+				
 				mano.habilitar(window,jugador1)
 				turno_jugador()
+				
 			
 			else:
 				mano.habilitar(window,jugador1)
+				
 				turno_jugador()
+				
 				turno_maquina(maquina)
+				
 				mano.habilitar(window,jugador1)
+				
+
 
 		
 	window.close()
