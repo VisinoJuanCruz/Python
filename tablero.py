@@ -40,6 +40,15 @@ class Tablero:
 		else:
 			return "horizontal"
 	
+	def esVacio(self):
+		vacio = True
+		for x in self.diccionario:
+			if self.diccionario[x] != "":
+				vacio = False
+				break
+		
+		return vacio
+
 
 	def habilitar_botones(self,window,estructura):
 		"""Habilita los casilleros del teclado disponibles para jugar. Dependiendo el sentido en el que el jugador este formando la palabra"""
@@ -47,20 +56,24 @@ class Tablero:
 		lista_keys = list(estructura.keys())
 		
 		
-		if self.sentido(lista_keys) == "cero":
-			self.estado_botones(window,False)
-		elif self.sentido(lista_keys) == "uno":
-			coorde = lista_keys[-1]
-			if (int(coorde[0]+1)<self.alto) and self.diccionario[tuple((int(coorde[0]+1),int(coorde[1])))]  == "":
+		if self.esVacio():
+			window[(self.alto-1)/2,(self.ancho-1)/2].Update(disabled = False)
+			
+		else:
+			if self.sentido(lista_keys) == "cero":
+				self.estado_botones(window,False)
+			elif self.sentido(lista_keys) == "uno":
+				coorde = lista_keys[-1]
+				if (int(coorde[0]+1)<self.alto) and self.diccionario[tuple((int(coorde[0]+1),int(coorde[1])))]  == "":
+					window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
+				if int(coorde[1]+1)<self.ancho and self.diccionario[tuple((int(coorde[0]),int(coorde[1]+1)))]  == "":
+					window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
+			elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
+				
 				window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
-			if int(coorde[1]+1)<self.ancho and self.diccionario[tuple((int(coorde[0]),int(coorde[1]+1)))]  == "":
+			elif (self.sentido(lista_keys) == "horizontal") and (lista_keys[-1][1]+1 < self.ancho):
+				
 				window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
-		elif (self.sentido(lista_keys) == "vertical") and (lista_keys[-1][0]+1 < self.alto):
-			
-			window[lista_keys[-1][0]+1,lista_keys[-1][1]].update(disabled = False)
-		elif (self.sentido(lista_keys) == "horizontal") and (lista_keys[-1][1]+1 < self.ancho):
-			
-			window[lista_keys[-1][0],lista_keys[-1][1]+1].update(disabled = False)
 			
 	
 		
@@ -88,7 +101,7 @@ class Tablero:
 			
 			if self.diccionario[x] == "":
 				
-				window[x].Update(text = self.diccionario[x],image_filename= "./IconosFichas/Blanco.png",image_subsample =5,image_size=(43,45))
+				window[x].Update(text = self.diccionario[x],image_filename= "./IconosFichas/Blanco.png",image_subsample =5,image_size=(40,37))#(43,45))
 			else:
 				ruta = "./IconosFichas/"+self.diccionario[x]+".png"
-				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 5,image_size = (43,45))
+				window[x].Update(text = self.diccionario[x],image_filename=ruta,image_subsample = 5,image_size = (40,37))

@@ -18,11 +18,19 @@ from os import remove
 
 
 def iniciar():
-	alto=15
-	ancho=15
+	
 	import mano
 	import signal
 	import time
+
+
+	with open('configuration.json','r') as tamaño:
+		diccionario_tamaño = json.load(tamaño)
+
+
+	alto=diccionario_tamaño['diametro']
+	ancho=alto
+
 
 
 	
@@ -102,6 +110,10 @@ def iniciar():
 		
 		
 		se_puede = False
+		if tablero.esVacio():
+			casillero = ((tablero.alto-1)/2,(tablero.ancho-1)/2)
+			retorno  =(casillero,"vertical")
+			se_puede = True
 		while not se_puede:
 			se_puede = True
 
@@ -186,7 +198,8 @@ def iniciar():
 								'cant_fichas':"",
 								'cant_puntos':"",
 								'turno':"",
-								'puntaje':""}
+								'puntaje':"",
+								'uso_cambio:':""}
 
 		diccionario_jugador['nombre'] = jugador.nombre
 		diccionario_jugador['fichas'] = jugador.fichas
@@ -194,6 +207,7 @@ def iniciar():
 		diccionario_jugador['cant_puntos'] = jugador.cant_puntos
 		diccionario_jugador['turno'] = jugador.turno
 		diccionario_jugador['puntaje'] = jugador.puntaje
+		diccionario_jugador['uso_cambio'] = jugador.uso_cambio
 
 		info_guardada[jugador.nombre] = diccionario_jugador
 
@@ -233,6 +247,7 @@ def iniciar():
 		jugador1.cant_puntos =contenido['jugador1']['cant_puntos']
 		jugador1.turno =contenido['jugador1']['turno']
 		jugador1.puntaje = contenido['jugador1']['puntaje']
+		jugador1.uso_cambio = contenido['jugador1']['uso_cambio']
 
 		maquina.nombre = contenido['maquina']['nombre']
 		maquina.fichas =	contenido['maquina']['fichas']
@@ -240,6 +255,7 @@ def iniciar():
 		maquina.cant_puntos =contenido['maquina']['cant_puntos']
 		maquina.turno =contenido['maquina']['turno']
 		maquina.puntaje = contenido['maquina']['puntaje']
+		maquina.uso_cambio = contenido['maquina']['uso_cambio']
 
 		coorde_tabla = {}
 
@@ -364,9 +380,12 @@ def iniciar():
 
 	def turno_jugador():
 		
+
 		while jugador1.turno:
 			window["_PASARTURNO_"].Update(disabled = False)
-			window["_CAMBIARFICHAS_"].Update(disabled = False)
+			if jugador1.uso_cambio < 3:
+				window["_CAMBIARFICHAS_"].Update(disabled = False)
+			
 			window["_POSPONER_"].Update(disabled = False)
 			
 
@@ -397,6 +416,10 @@ def iniciar():
 					mano.actualizar(window,jugador1)
 					event,values=window.read()
 					actualizar_timer()
+					
+					jugador1.uso_cambio += 1
+
+					
 				
 				
 
@@ -466,12 +489,13 @@ def iniciar():
 					vacio_diccionario(coordenadas_tablero)
 					mano_propia.habilitar(window,coordenadas_palabra)
 			window["_PASARTURNO_"].Update(disabled = True)
-			window["_CAMBIARFICHAS_"].Update(disabled = True)
+			if window["_CAMBIARFICHAS_"].Disabled == False:
+				window["_CAMBIARFICHAS_"].Update(disabled = True)
 			
 	def actualizar_timer():
 		tiempo_transcurrido = int(round(time.time() * 100)) - tiempo_inicial
 		tiempotext = ('{:02d}:{:02d}'.format((tiempo_transcurrido // 100) // 60,(tiempo_transcurrido // 100) ))
-		window["-TIMER-"].Update(tiempotext)
+		window["-TIMER-"].Update("TIEMPO TRANSCURRIDO : "+tiempotext)
 
 
 	def preparo_tablero():
@@ -498,10 +522,10 @@ def iniciar():
 		coordenadas_tablero[event] = (list(coordenadas_palabra)[-1])
 	
 	def creo_mano(booleano):
-		return [[sg.Button(str(""),size=(3, 3), pad=(0,0), border_width=1, disabled = booleano,
+		return [[sg.Button(str(""),size=(2, 2), pad=(0,0), border_width=1, disabled = booleano,
 			font='any 8', key=(col)) for col in range(7)] for row in range(1)]
 
-	matriz =  [[sg.Button(str(""),size=(3, 3),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
+	matriz =  [[sg.Button(str(""),size=(2, 2),disabled=True,button_color= ('grey','grey') ,pad=(0,0), border_width=1,
 				font='any 8',key=(row,col)) for col in range(alto)] for row in range(ancho)]
 	
 
@@ -538,11 +562,11 @@ def iniciar():
 	layout=mano_propia.fichas
 	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Text(jugador1.puntaje,key="-PUNTAJEPROPIO-", size=(25,1))]]
 	layout+=tablero.matriz
-	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Text(maquina.puntaje,key="-PUNTAJERIVAL-", size=(25,1)),sg.Text(' '*15),sg.Text("00:00",key="-TIMER-")]]
+	layout += [[sg.Text(""),sg.Text("PUNTAJE: "),sg.Text(maquina.puntaje,key="-PUNTAJERIVAL-", size=(25,1)),sg.Text(' '*15),sg.Text("TIEMPO TRANSCURRIDO : 00:00",key="-TIMER-")]]
 	layout+=mano_rival.fichas
 	layout+=[[sg.Button("COMENZAR",key="_COMENZAR_"),sg.Button("PASAR TURNO",key="_PASARTURNO_",disabled= True),sg.Button("CAMBIAR FICHAS",key="_CAMBIARFICHAS_",disabled = True),sg.Button("TOP10",key ="-TOP10-"),sg.Button("POSPONER", key = "_POSPONER_",disabled = True),sg.Button("TERMINAR",key="_TERMINAR_")]]
 	
-	window = sg.Window("ScrabbleAR",layout,size=(1000,1000))
+	window = sg.Window("ScrabbleAR",layout,size=(alto*55,ancho*55))
 
 	#Define quien comienza el turno. Por el  momento no se utiliza.
 	comienza = random.choice((jugador1,maquina))

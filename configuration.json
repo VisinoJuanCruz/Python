@@ -30,7 +30,7 @@
         },
         "H": {
             "cantidad": 2,
-            "valor": 4
+            "valor": 123
         },
         "I": {
             "cantidad": 6,
@@ -118,5 +118,6 @@
         }
     },
     "dificultad": 1,
-    "tiempo": 10
+    "tiempo": 3,
+    "diametro": 17
 }
