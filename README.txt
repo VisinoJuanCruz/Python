@@ -11,6 +11,7 @@ Nivel 3 : Solo verbos.
 
 Integrantes : Visino Juan Cruz
 
+GitHub : https://github.com/VisinoJuanCruz/Python
 
 Ejecutar en terminal:
 python3 ScrabbleAR.py
